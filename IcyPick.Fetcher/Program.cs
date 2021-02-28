@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
@@ -19,6 +20,9 @@ namespace IcyPick.Fetcher
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Crawler>();
+                    services.AddSingleton<IHeroesRepository, IcyVeinsRepository>();
+                    services.AddHttpClient();
+                    services.AddOptions<IcyVeinsRepositoryOptions>().BindConfiguration("IcyVeins").ValidateDataAnnotations();
                 });
     }
 }
