@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IcyPick.Fetcher
+namespace IcyPick.Fetcher.Models
 {
     public record HeroSynergiesAndCounter(
         IReadOnlyList<string> SynergicHeroes,

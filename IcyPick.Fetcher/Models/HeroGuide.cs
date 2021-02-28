@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IcyPick.Fetcher
+namespace IcyPick.Fetcher.Models
 {
     public record HeroGuide(
         string Id,

@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using IcyPick.Fetcher.Infrastructure;
+using IcyPick.Fetcher.Models;
+using IcyPick.Fetcher.Repositories;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace IcyPick.Fetcher
 {
-    public class HeroesFetchingOperation
+    public class HeroesFetchingOperation : IMainService
     {
         private readonly IHeroesRepository repository;
         private readonly ILogger logger;

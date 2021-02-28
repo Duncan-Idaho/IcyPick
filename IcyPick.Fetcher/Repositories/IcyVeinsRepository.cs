@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using IcyPick.Fetcher.Models;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IcyPick.Fetcher
+namespace IcyPick.Fetcher.Repositories
 {
     public class IcyVeinsRepository : IHeroesRepository
     {

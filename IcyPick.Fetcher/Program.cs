@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using IcyPick.Fetcher.Infrastructure;
+using IcyPick.Fetcher.Repositories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -19,11 +21,10 @@ namespace IcyPick.Fetcher
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<Crawler>();
+                    services.AddMainService<HeroesFetchingOperation>();
                     services.AddSingleton<IHeroesRepository, IcyVeinsRepository>();
                     services.AddHttpClient();
                     services.AddOptions<IcyVeinsRepositoryOptions>().BindConfiguration("IcyVeins").ValidateDataAnnotations();
-                    services.AddScoped<HeroesFetchingOperation>();
                 });
     }
 }

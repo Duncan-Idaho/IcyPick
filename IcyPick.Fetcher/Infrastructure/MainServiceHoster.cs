@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using IcyPick.Fetcher.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace IcyPick.Fetcher
 {
-    public class Crawler : BackgroundService
+    public class MainServiceHoster : BackgroundService
     {
         private readonly IHostApplicationLifetime applicationHostLifetime;
         private readonly IServiceProvider services;
         private readonly ILogger logger;
 
-        public Crawler(
+        public MainServiceHoster(
             IHostApplicationLifetime applicationHostLifetime,
             IServiceProvider services,
-            ILogger<Crawler> logger)
+            ILogger<MainServiceHoster> logger)
         {
             this.applicationHostLifetime = applicationHostLifetime;
             this.services = services;
@@ -46,7 +47,7 @@ namespace IcyPick.Fetcher
         {
             using var scope = services.CreateScope();
 
-            await scope.ServiceProvider.GetRequiredService<HeroesFetchingOperation>().ExecuteAsync();
+            await scope.ServiceProvider.GetRequiredService<IMainService>().ExecuteAsync();
         }
     }
 }

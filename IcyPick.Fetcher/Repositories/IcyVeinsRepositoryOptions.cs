@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IcyPick.Fetcher
+namespace IcyPick.Fetcher.Repositories
 {
     public class IcyVeinsRepositoryOptions
     {
