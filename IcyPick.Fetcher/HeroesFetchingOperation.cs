@@ -31,22 +31,25 @@ namespace IcyPick.Fetcher
         {
             var heroes = await repository.GetHeroesAsync(applicationHostLifetime.ApplicationStopping);
 
-            foreach (var heroe in heroes)
+            foreach (var hero in heroes)
             {
-                logger.LogInformation("Heroe found : {Id} as {Category} ({Guide} / {Icon})", heroe.Id, heroe.Category, heroe.GuideUri, heroe.IconUri);
+                logger.LogInformation("Hero found : {Id} ({Guide})", hero.Id, hero.GuideUri);
             }
 
-            var guides = (await Task.WhenAll(heroes.Select(TryGetHeroeGuideAsync)))
+            var guides = (await Task.WhenAll(heroes.Select(TryGetHeroGuideAsync)))
                 .WhereNotNull();
 
             File.WriteAllText("guides.json", JsonSerializer.Serialize(guides));
         }
 
-        private async Task<HeroeGuide?> TryGetHeroeGuideAsync(Heroe hero)
+        private async Task<HeroGuide?> TryGetHeroGuideAsync(Hero hero)
         {
             try
             {
-                return await repository.GetHeroeGuideAsync(hero, applicationHostLifetime.ApplicationStopping);
+                var result = await repository.GetHeroGuideAsync(hero, applicationHostLifetime.ApplicationStopping);
+                logger.LogInformation("Hero guide for found for : {Id}", hero.Id);
+                
+                return result;
             }
             catch (Exception exception)
             {

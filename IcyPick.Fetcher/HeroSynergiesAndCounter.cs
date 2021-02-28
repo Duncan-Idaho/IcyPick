@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IcyPick.Fetcher
 {
-    public record HeroeSynergiesAndCounter(
+    public record HeroSynergiesAndCounter(
         IReadOnlyList<string> SynergicHeroes,
         string SynergySource,
         IReadOnlyList<string> CounteringHeroes,

@@ -6,7 +6,7 @@ namespace IcyPick.Fetcher
 {
     public interface IHeroesRepository
     {
-        Task<HeroeGuide> GetHeroeGuideAsync(Heroe heroe, CancellationToken cancellationToken);
-        Task<IReadOnlyList<Heroe>> GetHeroesAsync(CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<Hero>> GetHeroesAsync(CancellationToken cancellationToken = default);
+        Task<HeroGuide> GetHeroGuideAsync(Hero hero, CancellationToken cancellationToken);
     }
 }

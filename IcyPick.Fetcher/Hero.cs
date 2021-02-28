@@ -2,7 +2,7 @@
 
 namespace IcyPick.Fetcher
 {
-    public record Heroe(
+    public record Hero(
         string Id,
         string Name,
         string Category,

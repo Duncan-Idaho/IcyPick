@@ -33,7 +33,7 @@ namespace IcyPick.Fetcher
             return document;
         }
 
-        public async Task<IReadOnlyList<Heroe>> GetHeroesAsync(CancellationToken cancellationToken)
+        public async Task<IReadOnlyList<Hero>> GetHeroesAsync(CancellationToken cancellationToken)
         {
             var uri = new Uri(options.CurrentValue.BaseUrl!);
 
@@ -45,7 +45,7 @@ namespace IcyPick.Fetcher
         }
 
         private static readonly Regex idFinder = new Regex("/([a-zA-Z_-]*)-build-guide$");
-        private static Heroe ParseHeroNode(HtmlNode node, Uri baseUri)
+        private static Hero ParseHeroNode(HtmlNode node, Uri baseUri)
         {
             var guideUrl = node.SelectSingleNode("a").GetAttributeValue("href", null)
                 ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a href");
@@ -53,7 +53,7 @@ namespace IcyPick.Fetcher
                 ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a/img src");
             var category = node.SelectSingleNode("ancestor::*[@class='nav_entry nav_entry_with_content']/*[@class='header']").InnerText.ToLower();
 
-            return new Heroe(
+            return new Hero(
                 idFinder.Match(guideUrl).Groups[1].Value,
                 node.InnerText.Trim(),
                 category,
@@ -61,37 +61,37 @@ namespace IcyPick.Fetcher
                 new Uri(baseUri, iconUrl));
         }
 
-        public async Task<HeroeGuide> GetHeroeGuideAsync(Heroe heroe, CancellationToken cancellationToken)
+        public async Task<HeroGuide> GetHeroGuideAsync(Hero hero, CancellationToken cancellationToken)
         {
-            var document = await GetHtmlDocumentAsync(heroe.GuideUri, cancellationToken);
+            var document = await GetHtmlDocumentAsync(hero.GuideUri, cancellationToken);
 
-            return new HeroeGuide(
-                heroe,
+            return new HeroGuide(
+                hero,
                 ParseMapPreference(document),
                 ParseSynergiesAndCounter(document));
 
         }
 
-        private static HeroeMapPreference ParseMapPreference(HtmlDocument document)
+        private static HeroMapPreference ParseMapPreference(HtmlDocument document)
         {
             var strongerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_stronger']");
             var averageNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_average']");
             var weakerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_weaker']");
             var strategyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_text']");
 
-            return new HeroeMapPreference(
+            return new HeroMapPreference(
                 FindTooltips(strongerNode, "map"),
                 FindTooltips(averageNode, "map"),
                 FindTooltips(weakerNode, "map"),
                 strategyNode.InnerText);
         }
 
-        private static HeroeSynergiesAndCounter ParseSynergiesAndCounter(HtmlDocument document)
+        private static HeroSynergiesAndCounter ParseSynergiesAndCounter(HtmlDocument document)
         {
             var synergyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_synergies']//*[@class='heroes_synergies_counters_content']");
             var counterNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_counters']//*[@class='heroes_synergies_counters_content']");
 
-            return new HeroeSynergiesAndCounter(
+            return new HeroSynergiesAndCounter(
                 FindTooltips(synergyNode, "hero"),
                 synergyNode.InnerText.Trim(),
 
