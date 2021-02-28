@@ -23,6 +23,7 @@ namespace IcyPick.Fetcher
                     services.AddSingleton<IHeroesRepository, IcyVeinsRepository>();
                     services.AddHttpClient();
                     services.AddOptions<IcyVeinsRepositoryOptions>().BindConfiguration("IcyVeins").ValidateDataAnnotations();
+                    services.AddScoped<HeroesFetchingOperation>();
                 });
     }
 }

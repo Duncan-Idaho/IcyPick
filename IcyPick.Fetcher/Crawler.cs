@@ -30,7 +30,7 @@ namespace IcyPick.Fetcher
         {
             try
             {
-                await DoExecuteAsync(stoppingToken);
+                await DoExecuteAsync();
             }
             catch (Exception exception)
             {
@@ -42,18 +42,11 @@ namespace IcyPick.Fetcher
             }
         }
 
-        private async Task DoExecuteAsync(CancellationToken stoppingToken)
+        private async Task DoExecuteAsync()
         {
             using var scope = services.CreateScope();
 
-            var repository = scope.ServiceProvider.GetRequiredService<IHeroesRepository>();
-
-            var heroes = await repository.GetHeroesAsync(stoppingToken);
-
-            foreach(var heroe in heroes)
-            {
-                logger.LogInformation("Heroe found : {Name} as {Category} ({Guide} / {Icon})", heroe.Name, heroe.Category, heroe.GuideUri, heroe.IconUri);
-            }
+            await scope.ServiceProvider.GetRequiredService<HeroesFetchingOperation>().ExecuteAsync();
         }
     }
 }

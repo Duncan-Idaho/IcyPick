@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,23 +22,29 @@ namespace IcyPick.Fetcher
             this.options = options;
         }
 
-        private HttpClient CreateClient()
+        private async Task<HtmlDocument> GetHtmlDocumentAsync(Uri uri, CancellationToken cancellationToken)
         {
-            var client = clientFactory.CreateClient();
-            client.BaseAddress = new Uri(options.CurrentValue.BaseUrl!); // Option validation ensures not null
+            using var client = clientFactory.CreateClient();
+            using var response = await client.GetAsync(uri, cancellationToken);
 
-            return client;
+            var document = new HtmlDocument();
+            document.Load(await response.Content.ReadAsStreamAsync(cancellationToken));
+
+            return document;
         }
 
         public async Task<IReadOnlyList<Heroe>> GetHeroesAsync(CancellationToken cancellationToken)
         {
-            using var client = CreateClient();
-            var document = await GetHtmlDocumentAsync(client, "", cancellationToken);
+            var uri = new Uri(options.CurrentValue.BaseUrl!);
+
+            var document = await GetHtmlDocumentAsync(uri, cancellationToken);
+
             return document.DocumentNode.SelectNodes("//*[@class='nav_content_block_entry_heroes_hero']")
-                .Select(node => ParseHeroNode(node, client.BaseAddress!))
+                .Select(node => ParseHeroNode(node, uri))
                 .ToList();
         }
 
+        private static readonly Regex idFinder = new Regex("/([a-zA-Z_-]*)-build-guide$");
         private static Heroe ParseHeroNode(HtmlNode node, Uri baseUri)
         {
             var guideUrl = node.SelectSingleNode("a").GetAttributeValue("href", null)
@@ -47,19 +54,56 @@ namespace IcyPick.Fetcher
             var category = node.SelectSingleNode("ancestor::*[@class='nav_entry nav_entry_with_content']/*[@class='header']").InnerText.ToLower();
 
             return new Heroe(
+                idFinder.Match(guideUrl).Groups[1].Value,
                 node.InnerText.Trim(),
                 category,
                 new Uri(baseUri, guideUrl),
                 new Uri(baseUri, iconUrl));
         }
 
-        private static async Task<HtmlDocument> GetHtmlDocumentAsync(HttpClient client, string relativeUrl, CancellationToken cancellationToken)
+        public async Task<HeroeGuide> GetHeroeGuideAsync(Heroe heroe, CancellationToken cancellationToken)
         {
-            using var response = await client.GetAsync(relativeUrl, cancellationToken);
+            var document = await GetHtmlDocumentAsync(heroe.GuideUri, cancellationToken);
 
-            var document = new HtmlDocument();
-            document.Load(await response.Content.ReadAsStreamAsync(cancellationToken));
-            return document;
+            return new HeroeGuide(
+                heroe,
+                ParseMapPreference(document),
+                ParseSynergiesAndCounter(document));
+
         }
+
+        private static HeroeMapPreference ParseMapPreference(HtmlDocument document)
+        {
+            var strongerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_stronger']");
+            var averageNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_average']");
+            var weakerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_weaker']");
+            var strategyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_text']");
+
+            return new HeroeMapPreference(
+                FindTooltips(strongerNode, "map"),
+                FindTooltips(averageNode, "map"),
+                FindTooltips(weakerNode, "map"),
+                strategyNode.InnerText);
+        }
+
+        private static HeroeSynergiesAndCounter ParseSynergiesAndCounter(HtmlDocument document)
+        {
+            var synergyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_synergies']//*[@class='heroes_synergies_counters_content']");
+            var counterNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_counters']//*[@class='heroes_synergies_counters_content']");
+
+            return new HeroeSynergiesAndCounter(
+                FindTooltips(synergyNode, "hero"),
+                synergyNode.InnerText.Trim(),
+
+                FindTooltips(counterNode, "hero"),
+                counterNode.InnerText.Trim());
+        }
+            
+        private static IReadOnlyList<string> FindTooltips(HtmlNode node, string prefix)
+            => (node.SelectNodes(".//*[@data-heroes-tooltip]") ?? Enumerable.Empty<HtmlNode>())
+                .Select(node => node.GetAttributeValue("data-heroes-tooltip", null))
+                .Where(value => value != null && value.StartsWith(prefix + "-", StringComparison.OrdinalIgnoreCase))
+                .Select(value => value[(prefix.Length + 1)..])
+                .ToList();
     }
 }
