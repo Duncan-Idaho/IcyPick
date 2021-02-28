@@ -1,9 +1,7 @@
 ﻿using IcyPick.Fetcher.Infrastructure;
 using IcyPick.Fetcher.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.Threading.Tasks;
 
 namespace IcyPick.Fetcher
