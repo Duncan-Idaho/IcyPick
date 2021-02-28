@@ -3,7 +3,9 @@ using IcyPick.Fetcher.Models;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -105,5 +107,24 @@ namespace IcyPick.Fetcher.Repositories
                 .Where(value => value != null && value.StartsWith(prefix + "-", StringComparison.OrdinalIgnoreCase))
                 .Select(value => value[(prefix.Length + 1)..])
                 .ToList();
+
+        public async Task GetHeroImageAsync(Hero hero, Func<Task<Stream>> outputStreamAsyncFactory, CancellationToken cancellationToken)
+        {
+            await DownloadImageAsync(hero.IconUri, outputStreamAsyncFactory, cancellationToken);
+        }
+
+        async Task DownloadImageAsync(Uri uri, Func<Task<Stream>> outputStreamAsyncFactory, CancellationToken cancellationToken)
+        {
+            using var client = clientFactory.CreateClient();
+            using var response = await client.GetAsync(uri, cancellationToken);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException($"Could not download image {uri}");
+
+            using var inputStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            using var outputStream = await outputStreamAsyncFactory();
+
+            await inputStream.CopyToAsync(outputStream, cancellationToken);
+        }
     }
 }
