@@ -9,11 +9,11 @@ namespace IcyPick.Fetcher.Models
         Uri GuideUri,
         Uri IconUri,
         
-        HeroMapPreference Preference,
-        HeroSynergiesAndCounter SynergiesAndCounter) : Hero(Id, Name, Category, GuideUri, IconUri)
+        HeroMapPreference MapPreference,
+        HeroSynergiesAndCounter SynergiesAndCounter) : Hero(Id, Name, Category, GuideUri, IconUri), IEntityWithImage
     {
-        public HeroGuide(Hero hero, HeroMapPreference preference, HeroSynergiesAndCounter synergiesAndCounter)
-            : this(hero.Id, hero.Name, hero.Category, hero.GuideUri, hero.IconUri, preference, synergiesAndCounter)
+        public HeroGuide(Hero hero, HeroMapPreference mapPreference, HeroSynergiesAndCounter synergiesAndCounter)
+            : this(hero.Id, hero.Name, hero.Category, hero.GuideUri, hero.IconUri, mapPreference, synergiesAndCounter)
         {
         }
     }

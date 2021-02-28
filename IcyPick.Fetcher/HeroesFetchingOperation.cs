@@ -38,7 +38,10 @@ namespace IcyPick.Fetcher
             var guides = await GetGuides(heroes);
 
             SaveGuides(guides);
-            await DownloadHeroImagesAsync(guides);
+            await DownloadImagesAsync(guides, "heroes");
+
+            var maps = guides.SelectMany(guide => guide.MapPreference.AllMaps).Distinct();
+            await DownloadImagesAsync(maps, "maps");
         }
 
         async Task<IReadOnlyList<Hero>> GetHeroes()
@@ -81,33 +84,33 @@ namespace IcyPick.Fetcher
             File.WriteAllText(Path.Combine(options.CurrentValue.DataOut, "guides.json"), JsonSerializer.Serialize(guides));
         }
 
-        async Task DownloadHeroImagesAsync(IReadOnlyList<Hero> heroes)
+        async Task DownloadImagesAsync(IEnumerable<IEntityWithImage> entities, string folder)
         {
-            var heroImagesFolder = Path.Combine(options.CurrentValue.ImagesOutDir, "heroes");
-            Directory.CreateDirectory(heroImagesFolder);
+            var imagesFolder = Path.Combine(options.CurrentValue.ImagesOutDir, folder);
+            Directory.CreateDirectory(imagesFolder);
 
-            await Task.WhenAll(heroes.Select(TryDownloadHeroImageAsync));
+            await Task.WhenAll(entities.Select(TryDownloadImagesAsync));
 
-            async Task TryDownloadHeroImageAsync(Hero hero)
+            async Task TryDownloadImagesAsync(IEntityWithImage entity)
             {
                 try
                 {
-                    await repository.GetHeroImageAsync(
-                        hero, 
-                        () => CreateHeroImageFile(hero), 
+                    await repository.DownloadImageAsync(
+                        entity, 
+                        () => CreateImageFile(entity), 
                         applicationHostLifetime.ApplicationStopping);
-                    logger.LogInformation("Hero guide for found for : {Id}", hero.Id);
+                    logger.LogInformation("{Type} image found for : {Id}", entity.GetType().Name, entity.Id);
                 }
                 catch (Exception exception)
                 {
-                    logger.LogError(exception, "Failed loading hero image of {Id}", hero.Id);
+                    logger.LogError(exception, "Failed loading {Type} image of {Id}", entity.GetType().Name, entity.Id);
                 }
             }
 
-            Task<Stream> CreateHeroImageFile(Hero hero)
+            Task<Stream> CreateImageFile(IEntityWithImage entity)
             {
                 Stream ouputStream = new FileStream(
-                    Path.Combine(heroImagesFolder, hero.Id + ".jpg"),
+                    Path.Combine(imagesFolder, entity.Id + ".jpg"),
                     FileMode.Create,
                     FileAccess.Write);
 

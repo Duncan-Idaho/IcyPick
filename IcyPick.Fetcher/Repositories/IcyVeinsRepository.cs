@@ -69,12 +69,12 @@ namespace IcyPick.Fetcher.Repositories
 
             return new HeroGuide(
                 hero,
-                ParseMapPreference(document),
+                ParseMapPreference(document, hero.GuideUri),
                 ParseSynergiesAndCounter(document));
 
         }
 
-        static HeroMapPreference ParseMapPreference(HtmlDocument document)
+        static HeroMapPreference ParseMapPreference(HtmlDocument document, Uri baseUri)
         {
             var strongerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_stronger']");
             var averageNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_average']");
@@ -82,10 +82,28 @@ namespace IcyPick.Fetcher.Repositories
             var strategyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_text']");
 
             return new HeroMapPreference(
-                FindTooltips(strongerNode, "map"),
-                FindTooltips(averageNode, "map"),
-                FindTooltips(weakerNode, "map"),
+                FindTooltipNodes(strongerNode).Select(ParseMap).WhereNotNull().ToList(),
+                FindTooltipNodes(averageNode).Select(ParseMap).WhereNotNull().ToList(),
+                FindTooltipNodes(weakerNode).Select(ParseMap).WhereNotNull().ToList(),
                 strategyNode.InnerText);
+
+            Map? ParseMap(HtmlNode node)
+            {
+                var id = ExtractTooltipId(node, "map");
+                if (id == null)
+                    return null;
+                
+                var imageNode = node.SelectSingleNode(".//img")
+                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img");
+
+                var imagePath = imageNode.GetAttributeValue("src", null)
+                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img src");
+
+                var imageTitle = imageNode.GetAttributeValue("title", null)
+                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img title");
+
+                return new Map(id, imageTitle, new Uri(baseUri, imagePath));
+            }
         }
 
         static HeroSynergiesAndCounter ParseSynergiesAndCounter(HtmlDocument document)
@@ -94,32 +112,37 @@ namespace IcyPick.Fetcher.Repositories
             var counterNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_counters']//*[@class='heroes_synergies_counters_content']");
 
             return new HeroSynergiesAndCounter(
-                FindTooltips(synergyNode, "hero"),
+                FindTooltipIds(synergyNode, "hero"),
                 synergyNode.InnerText.Trim(),
 
-                FindTooltips(counterNode, "hero"),
+                FindTooltipIds(counterNode, "hero"),
                 counterNode.InnerText.Trim());
+
+            static IReadOnlyList<string> FindTooltipIds(HtmlNode node, string prefix)
+                => FindTooltipNodes(node)
+                    .Select(node => ExtractTooltipId(node, prefix))
+                    .WhereNotNull()
+                    .ToList();
         }
             
-        static IReadOnlyList<string> FindTooltips(HtmlNode node, string prefix)
-            => (node.SelectNodes(".//*[@data-heroes-tooltip]") ?? Enumerable.Empty<HtmlNode>())
-                .Select(node => node.GetAttributeValue("data-heroes-tooltip", null))
-                .Where(value => value != null && value.StartsWith(prefix + "-", StringComparison.OrdinalIgnoreCase))
-                .Select(value => value[(prefix.Length + 1)..])
-                .ToList();
+        static IEnumerable<HtmlNode> FindTooltipNodes(HtmlNode node)
+            => node.SelectNodes(".//*[@data-heroes-tooltip]") ?? Enumerable.Empty<HtmlNode>();
 
-        public async Task GetHeroImageAsync(Hero hero, Func<Task<Stream>> outputStreamAsyncFactory, CancellationToken cancellationToken)
+        static string? ExtractTooltipId(HtmlNode node, string prefix)
         {
-            await DownloadImageAsync(hero.IconUri, outputStreamAsyncFactory, cancellationToken);
+            var id = node.GetAttributeValue("data-heroes-tooltip", null);
+            return id != null && id.StartsWith(prefix + "-", StringComparison.OrdinalIgnoreCase)
+                ? id[(prefix.Length + 1)..]
+                : null;
         }
 
-        async Task DownloadImageAsync(Uri uri, Func<Task<Stream>> outputStreamAsyncFactory, CancellationToken cancellationToken)
+        public async Task DownloadImageAsync(IEntityWithImage entity, Func<Task<Stream>> outputStreamAsyncFactory, CancellationToken cancellationToken)
         {
             using var client = clientFactory.CreateClient();
-            using var response = await client.GetAsync(uri, cancellationToken);
+            using var response = await client.GetAsync(entity.IconUri, cancellationToken);
 
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new InvalidOperationException($"Could not download image {uri}");
+                throw new InvalidOperationException($"Could not download image {entity.IconUri} for {entity.Id} ({entity.GetType().Name}");
 
             using var inputStream = await response.Content.ReadAsStreamAsync(cancellationToken);
             using var outputStream = await outputStreamAsyncFactory();
