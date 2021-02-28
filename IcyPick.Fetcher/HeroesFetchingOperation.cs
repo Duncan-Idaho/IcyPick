@@ -16,9 +16,9 @@ namespace IcyPick.Fetcher
 {
     public class HeroesFetchingOperation : IMainService
     {
-        private readonly IHeroesRepository repository;
-        private readonly ILogger logger;
-        private readonly IHostApplicationLifetime applicationHostLifetime;
+        readonly IHeroesRepository repository;
+        readonly ILogger logger;
+        readonly IHostApplicationLifetime applicationHostLifetime;
 
         public HeroesFetchingOperation(
             IHeroesRepository repository,
@@ -45,7 +45,7 @@ namespace IcyPick.Fetcher
             File.WriteAllText("guides.json", JsonSerializer.Serialize(guides));
         }
 
-        private async Task<HeroGuide?> TryGetHeroGuideAsync(Hero hero)
+        async Task<HeroGuide?> TryGetHeroGuideAsync(Hero hero)
         {
             try
             {

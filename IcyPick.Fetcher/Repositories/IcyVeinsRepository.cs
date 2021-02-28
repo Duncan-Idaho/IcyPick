@@ -14,8 +14,8 @@ namespace IcyPick.Fetcher.Repositories
 {
     public class IcyVeinsRepository : IHeroesRepository
     {
-        private readonly IHttpClientFactory clientFactory;
-        private readonly IOptionsMonitor<IcyVeinsRepositoryOptions> options;
+        readonly IHttpClientFactory clientFactory;
+        readonly IOptionsMonitor<IcyVeinsRepositoryOptions> options;
 
         public IcyVeinsRepository(IHttpClientFactory clientFactory, IOptionsMonitor<IcyVeinsRepositoryOptions> options)
         {
@@ -23,7 +23,7 @@ namespace IcyPick.Fetcher.Repositories
             this.options = options;
         }
 
-        private async Task<HtmlDocument> GetHtmlDocumentAsync(Uri uri, CancellationToken cancellationToken)
+        async Task<HtmlDocument> GetHtmlDocumentAsync(Uri uri, CancellationToken cancellationToken)
         {
             using var client = clientFactory.CreateClient();
             using var response = await client.GetAsync(uri, cancellationToken);
@@ -45,8 +45,8 @@ namespace IcyPick.Fetcher.Repositories
                 .ToList();
         }
 
-        private static readonly Regex idFinder = new Regex("/([a-zA-Z_-]*)-build-guide$");
-        private static Hero ParseHeroNode(HtmlNode node, Uri baseUri)
+        static readonly Regex idFinder = new Regex("/([a-zA-Z_-]*)-build-guide$");
+        static Hero ParseHeroNode(HtmlNode node, Uri baseUri)
         {
             var guideUrl = node.SelectSingleNode("a").GetAttributeValue("href", null)
                 ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a href");
@@ -73,7 +73,7 @@ namespace IcyPick.Fetcher.Repositories
 
         }
 
-        private static HeroMapPreference ParseMapPreference(HtmlDocument document)
+        static HeroMapPreference ParseMapPreference(HtmlDocument document)
         {
             var strongerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_stronger']");
             var averageNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_average']");
@@ -87,7 +87,7 @@ namespace IcyPick.Fetcher.Repositories
                 strategyNode.InnerText);
         }
 
-        private static HeroSynergiesAndCounter ParseSynergiesAndCounter(HtmlDocument document)
+        static HeroSynergiesAndCounter ParseSynergiesAndCounter(HtmlDocument document)
         {
             var synergyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_synergies']//*[@class='heroes_synergies_counters_content']");
             var counterNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_counters']//*[@class='heroes_synergies_counters_content']");
@@ -100,7 +100,7 @@ namespace IcyPick.Fetcher.Repositories
                 counterNode.InnerText.Trim());
         }
             
-        private static IReadOnlyList<string> FindTooltips(HtmlNode node, string prefix)
+        static IReadOnlyList<string> FindTooltips(HtmlNode node, string prefix)
             => (node.SelectNodes(".//*[@data-heroes-tooltip]") ?? Enumerable.Empty<HtmlNode>())
                 .Select(node => node.GetAttributeValue("data-heroes-tooltip", null))
                 .Where(value => value != null && value.StartsWith(prefix + "-", StringComparison.OrdinalIgnoreCase))

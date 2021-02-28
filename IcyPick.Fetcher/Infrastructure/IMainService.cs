@@ -8,6 +8,6 @@ namespace IcyPick.Fetcher.Infrastructure
 {
     public interface IMainService
     {
-        public Task ExecuteAsync();
+        Task ExecuteAsync();
     }
 }

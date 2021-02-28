@@ -13,9 +13,9 @@ namespace IcyPick.Fetcher
 {
     public class MainServiceHoster : BackgroundService
     {
-        private readonly IHostApplicationLifetime applicationHostLifetime;
-        private readonly IServiceProvider services;
-        private readonly ILogger logger;
+        readonly IHostApplicationLifetime applicationHostLifetime;
+        readonly IServiceProvider services;
+        readonly ILogger logger;
 
         public MainServiceHoster(
             IHostApplicationLifetime applicationHostLifetime,
@@ -43,7 +43,7 @@ namespace IcyPick.Fetcher
             }
         }
 
-        private async Task DoExecuteAsync()
+        async Task DoExecuteAsync()
         {
             using var scope = services.CreateScope();
 
