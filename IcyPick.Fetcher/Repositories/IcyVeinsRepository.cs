@@ -28,6 +28,7 @@ namespace IcyPick.Fetcher.Repositories
         {
             using var client = clientFactory.CreateClient();
             using var response = await client.GetAsync(uri, cancellationToken);
+            response.EnsureSuccessStatusCode();
 
             var document = new HtmlDocument();
             document.Load(await response.Content.ReadAsStreamAsync(cancellationToken));
@@ -35,6 +36,7 @@ namespace IcyPick.Fetcher.Repositories
             return document;
         }
 
+        static readonly Regex idFinder = new Regex("/([a-zA-Z_-]*)-build-guide$");
         public async Task<IReadOnlyList<Hero>> GetHeroesAsync(CancellationToken cancellationToken)
         {
             var uri = new Uri(options.CurrentValue.BaseUrl!);
@@ -44,23 +46,22 @@ namespace IcyPick.Fetcher.Repositories
             return document.DocumentNode.SelectNodes("//*[@class='nav_content_block_entry_heroes_hero']")
                 .Select(node => ParseHeroNode(node, uri))
                 .ToList();
-        }
 
-        static readonly Regex idFinder = new Regex("/([a-zA-Z_-]*)-build-guide$");
-        static Hero ParseHeroNode(HtmlNode node, Uri baseUri)
-        {
-            var guideUrl = node.SelectSingleNode("a").GetAttributeValue("href", null)
-                ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a href");
-            var iconUrl = node.SelectSingleNode("a/img").GetAttributeValue("src", null)
-                ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a/img src");
-            var category = node.SelectSingleNode("ancestor::*[@class='nav_entry nav_entry_with_content']/*[@class='header']").InnerText.ToLower();
+            static Hero ParseHeroNode(HtmlNode node, Uri baseUri)
+            {
+                var guideUrl = node.SelectSingleNode("a").GetAttributeValue("href", null)
+                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a href");
+                var iconUrl = node.SelectSingleNode("a/img").GetAttributeValue("src", null)
+                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a/img src");
+                var category = node.SelectSingleNode("ancestor::*[@class='nav_entry nav_entry_with_content']/*[@class='header']").InnerText.ToLower();
 
-            return new Hero(
-                idFinder.Match(guideUrl).Groups[1].Value,
-                node.InnerText.Trim(),
-                category,
-                new Uri(baseUri, guideUrl),
-                new Uri(baseUri, iconUrl));
+                return new Hero(
+                    idFinder.Match(guideUrl).Groups[1].Value,
+                    node.InnerText.Trim(),
+                    category,
+                    new Uri(baseUri, guideUrl),
+                    new Uri(baseUri, iconUrl));
+            }
         }
 
         public async Task<HeroGuide> GetHeroGuideAsync(Hero hero, CancellationToken cancellationToken)
@@ -72,68 +73,67 @@ namespace IcyPick.Fetcher.Repositories
                 ParseMapPreference(document, hero.GuideUri),
                 ParseSynergiesAndCounter(document));
 
-        }
-
-        static HeroMapPreference ParseMapPreference(HtmlDocument document, Uri baseUri)
-        {
-            var strongerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_stronger']");
-            var averageNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_average']");
-            var weakerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_weaker']");
-            var strategyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_text']");
-
-            return new HeroMapPreference(
-                FindTooltipNodes(strongerNode).Select(ParseMap).WhereNotNull().ToList(),
-                FindTooltipNodes(averageNode).Select(ParseMap).WhereNotNull().ToList(),
-                FindTooltipNodes(weakerNode).Select(ParseMap).WhereNotNull().ToList(),
-                strategyNode.InnerText);
-
-            Map? ParseMap(HtmlNode node)
+            static HeroMapPreference ParseMapPreference(HtmlDocument document, Uri baseUri)
             {
-                var id = ExtractTooltipId(node, "map");
-                if (id == null)
-                    return null;
+                var strongerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_stronger']");
+                var averageNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_average']");
+                var weakerNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_weaker']");
+                var strategyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_maps_text']");
+
+                return new HeroMapPreference(
+                    FindTooltipNodes(strongerNode).Select(ParseMap).WhereNotNull().ToList(),
+                    FindTooltipNodes(averageNode).Select(ParseMap).WhereNotNull().ToList(),
+                    FindTooltipNodes(weakerNode).Select(ParseMap).WhereNotNull().ToList(),
+                    strategyNode.InnerText.Trim());
+
+                Map? ParseMap(HtmlNode node)
+                {
+                    var id = ExtractTooltipId(node, "map");
+                    if (id == null)
+                        return null;
                 
-                var imageNode = node.SelectSingleNode(".//img")
-                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img");
+                    var imageNode = node.SelectSingleNode(".//img")
+                        ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img");
 
-                var imagePath = imageNode.GetAttributeValue("src", null)
-                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img src");
+                    var imagePath = imageNode.GetAttributeValue("src", null)
+                        ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img src");
 
-                var imageTitle = imageNode.GetAttributeValue("title", null)
-                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img title");
+                    var imageTitle = imageNode.GetAttributeValue("title", null)
+                        ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an img title");
 
-                return new Map(id, imageTitle, new Uri(baseUri, imagePath));
+                    return new Map(id, imageTitle, new Uri(baseUri, imagePath));
+                }
             }
-        }
 
-        static HeroSynergiesAndCounter ParseSynergiesAndCounter(HtmlDocument document)
-        {
-            var synergyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_synergies']//*[@class='heroes_synergies_counters_content']");
-            var counterNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_counters']//*[@class='heroes_synergies_counters_content']");
+            static HeroSynergiesAndCounter ParseSynergiesAndCounter(HtmlDocument document)
+            {
+                var synergyNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_synergies']//*[@class='heroes_synergies_counters_content']");
+                var counterNode = document.DocumentNode.SelectSingleNode("//*[@class='heroes_counters']//*[@class='heroes_synergies_counters_content']");
 
-            return new HeroSynergiesAndCounter(
-                FindTooltipIds(synergyNode, "hero"),
-                synergyNode.InnerText.Trim(),
+                return new HeroSynergiesAndCounter(
+                    FindTooltipIds(synergyNode, "hero"),
+                    synergyNode.InnerText.Trim(),
 
-                FindTooltipIds(counterNode, "hero"),
-                counterNode.InnerText.Trim());
+                    FindTooltipIds(counterNode, "hero"),
+                    counterNode.InnerText.Trim());
 
-            static IReadOnlyList<string> FindTooltipIds(HtmlNode node, string prefix)
-                => FindTooltipNodes(node)
-                    .Select(node => ExtractTooltipId(node, prefix))
-                    .WhereNotNull()
-                    .ToList();
-        }
-            
-        static IEnumerable<HtmlNode> FindTooltipNodes(HtmlNode node)
-            => node.SelectNodes(".//*[@data-heroes-tooltip]") ?? Enumerable.Empty<HtmlNode>();
+                static IReadOnlyList<string> FindTooltipIds(HtmlNode node, string prefix)
+                    => FindTooltipNodes(node)
+                        .Select(node => ExtractTooltipId(node, prefix))
+                        .WhereNotNull()
+                        .ToList();
+            }
 
-        static string? ExtractTooltipId(HtmlNode node, string prefix)
-        {
-            var id = node.GetAttributeValue("data-heroes-tooltip", null);
-            return id != null && id.StartsWith(prefix + "-", StringComparison.OrdinalIgnoreCase)
-                ? id[(prefix.Length + 1)..]
-                : null;
+            static IEnumerable<HtmlNode> FindTooltipNodes(HtmlNode node)
+                => node.SelectNodes(".//*[@data-heroes-tooltip]") ?? Enumerable.Empty<HtmlNode>();
+
+            static string? ExtractTooltipId(HtmlNode node, string prefix)
+            {
+                var id = node.GetAttributeValue("data-heroes-tooltip", null);
+                return id != null && id.StartsWith(prefix + "-", StringComparison.OrdinalIgnoreCase)
+                    ? id[(prefix.Length + 1)..]
+                    : null;
+            }
         }
 
         public async Task DownloadImageAsync(IEntityWithImage entity, Func<Task<Stream>> outputStreamAsyncFactory, CancellationToken cancellationToken)
@@ -148,6 +148,48 @@ namespace IcyPick.Fetcher.Repositories
             using var outputStream = await outputStreamAsyncFactory();
 
             await inputStream.CopyToAsync(outputStream, cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<Tier>> GetHeroTiersAsync(string list, CancellationToken cancellationToken)
+        {
+            var uri = new Uri(new Uri(options.CurrentValue.BaseUrl!), $"heroes-of-the-storm-{list}-tier-list");
+
+            var document = await GetHtmlDocumentAsync(uri, cancellationToken);
+
+            return document.DocumentNode.SelectNodes("//*[starts-with(@id, 'ranking-')]")
+                .Select(ParseHeroTierNode)
+                .GroupBy(pair => pair.tierName, pair => pair.hero)
+                .Select(group => new Tier(group.Key, group.ToList()))
+                .ToList();
+
+            static (string tierName, Tier.Hero hero) ParseHeroTierNode(HtmlNode node)
+            {
+                var prefixedId = node.GetAttributeValue("id", null)
+                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an an id");
+                var id = prefixedId["ranking-".Length..];
+                var isBanRecommended = node.SelectNodes(".//*[contains(@class, 'htl_ban_true')]")?.Any() == true;
+
+                var hero = new Tier.Hero(id, isBanRecommended, ExtractHeroCondition(id, node));
+
+                var tierNode = node.SelectSingleNode("(ancestor::*[@class='htl']/preceding-sibling::*[@class='heading_container heading_number_2'])[last()]")
+                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} parent htl's to be preceded by a heading_container");
+
+                var tierName = tierNode.SelectSingleNode(".//h2").GetAttributeValue("id", null)
+                    ?? throw new InvalidOperationException($"Parsing failed. Expected ${tierNode.OuterHtml} to contain an an id");
+
+                return (tierName, hero);
+            }
+
+            static string? ExtractHeroCondition(string heroId, HtmlNode node)
+            {
+                return heroId switch
+                {
+                    "varian" when node.HasClass("htl_varian_taunt") => "taunt",
+                    "varian" when node.HasClass("htl_varian_twin") => "twin",
+                    "varian" when node.HasClass("htl_varian_colossus") => "colossus",
+                    _ => null
+                };
+            }
         }
     }
 }

@@ -36,12 +36,42 @@ namespace IcyPick.Fetcher
         {
             var heroes = await GetHeroes();
             var guides = await GetGuides(heroes);
-
-            SaveGuides(guides);
-            await DownloadImagesAsync(guides, "heroes");
-
+            var masterTiers = await repository.GetHeroTiersAsync("master", applicationHostLifetime.ApplicationStopping);
+            var generalTiers = await repository.GetHeroTiersAsync("general", applicationHostLifetime.ApplicationStopping);
+            var aramTiers = await repository.GetHeroTiersAsync("aram", applicationHostLifetime.ApplicationStopping);
             var maps = guides.SelectMany(guide => guide.MapPreference.AllMaps).Distinct();
+
+            SaveGuides(new Output.Data(
+                guides.Select(CreateOutpuHero).ToList(),
+                maps.Select(Output.Map.FromModel).ToList()));
+            await DownloadImagesAsync(guides, "heroes");
             await DownloadImagesAsync(maps, "maps");
+
+            Output.Hero CreateOutpuHero(HeroGuide guide)
+                => new Output.Hero(
+                    guide.Id,
+                    guide.Name,
+                    guide.Category,
+                    guide.GuideUri,
+                    Output.HeroMapPreference.FromModel(guide.MapPreference),
+                    Output.HeroSynergiesAndCounter.FromModel(guide.SynergiesAndCounter),
+                    ExtractTierRecommendation(guide.Id, generalTiers),
+                    ExtractTierRecommendation(guide.Id, masterTiers),
+                    ExtractTierRecommendation(guide.Id, aramTiers));
+
+            Dictionary<string, Output.TierRecommendation> ExtractTierRecommendation(string heroId, IReadOnlyList<Tier> tiers)
+            {
+                var recommendations = from tier in tiers
+                                      from hero in tier.Heroes
+                                      where hero.Id == heroId
+                                      select (tier, hero);
+
+                return recommendations.ToDictionary(
+                    recommendation => recommendation.hero.Condition ?? "default",
+                    recommendation => new Output.TierRecommendation(
+                        recommendation.tier.Name,
+                        recommendation.hero.BanRecommended));
+            }
         }
 
         async Task<IReadOnlyList<Hero>> GetHeroes()
@@ -79,9 +109,9 @@ namespace IcyPick.Fetcher
             }
         }
 
-        void SaveGuides(IEnumerable<HeroGuide> guides)
+        void SaveGuides(Output.Data data)
         {
-            File.WriteAllText(Path.Combine(options.CurrentValue.DataOut, "guides.json"), JsonSerializer.Serialize(guides));
+            File.WriteAllText(Path.Combine(options.CurrentValue.DataOut, "data.json"), JsonSerializer.Serialize(data));
         }
 
         async Task DownloadImagesAsync(IEnumerable<IEntityWithImage> entities, string folder)

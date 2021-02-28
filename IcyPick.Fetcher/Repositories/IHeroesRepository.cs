@@ -12,5 +12,6 @@ namespace IcyPick.Fetcher.Repositories
         Task<IReadOnlyList<Hero>> GetHeroesAsync(CancellationToken cancellationToken = default);
         Task<HeroGuide> GetHeroGuideAsync(Hero hero, CancellationToken cancellationToken);
         Task DownloadImageAsync(IEntityWithImage entity, Func<Task<Stream>> outputStreamAsyncFactory, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Tier>> GetHeroTiersAsync(string list, CancellationToken cancellationToken);
     }
 }
