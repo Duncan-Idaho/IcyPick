@@ -111,7 +111,10 @@ namespace IcyPick.Fetcher
 
         void SaveGuides(Output.Data data)
         {
-            File.WriteAllText(options.CurrentValue.DataOut, JsonSerializer.Serialize(data));
+            File.WriteAllText(options.CurrentValue.DataOut, JsonSerializer.Serialize(data, new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            }));
         }
 
         async Task DownloadImagesAsync(IEnumerable<IEntityWithImage> entities, string folder)
