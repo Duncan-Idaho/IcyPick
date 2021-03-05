@@ -40,7 +40,7 @@ export default defineComponent({
 <style scoped lang="scss">
 @use "sass:math";
 
-@mixin hexagon($height) {
+@mixin hexagon($width) {
   clip-path: polygon(
     50% 0,
     100% 25%,
@@ -49,7 +49,7 @@ export default defineComponent({
     0% 75%,
     0% 25%);
     
-  $width: $height * math.sqrt(3) / 2;
+  $height: $width / math.sqrt(3) * 2;
   width: $width;
   height: $height;
 }

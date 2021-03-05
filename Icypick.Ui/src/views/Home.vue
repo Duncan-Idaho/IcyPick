@@ -1,21 +1,39 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <hero heroId="illidan"/>
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="central" v-for="category in categories" :key="category.id">
+    <h1>{{ category.id }} ({{category.heroes.length }})</h1>
+    <div>
+    <hero-jagged-rows :heroes="category.heroes" :rowSize="7"/>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Hero from '@/components/Hero.vue'
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import HeroJaggedRows from '@/components/HeroJaggedRows.vue'
+import { heroes } from '@/data.json'
 
 export default defineComponent({
   name: 'Home',
   components: {
-    HelloWorld,
-    Hero,
+    HeroJaggedRows,
   },
+  data() { 
+    const categories = [...new Set(heroes.map(hero => hero.category))]
+    return {
+      categories: categories.map(category => ({
+        id: category,
+        heroes: heroes.filter(hero => hero.category === category)
+      })),
+      heroes: heroes
+    }
+  }
 });
 </script>
+
+<style lang="scss" scoped>
+.central {
+  width: 80%;
+  margin: auto;
+  border: 1px solid black;
+}
+</style>
