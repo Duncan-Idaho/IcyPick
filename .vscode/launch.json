@@ -13,7 +13,7 @@
       "program": "${workspaceFolder}/IcyPick.Fetcher/bin/Debug/net5.0/IcyPick.Fetcher.dll",
       "args": [
         "DataOut=..\\IcyPick.Ui\\src\\data.json",
-        "ImagesOutDir=..\\IcyPick.Ui\\assets\\images\\"
+        "ImagesOutDir=..\\IcyPick.Ui\\src\\assets\\images\\"
       ],
       "cwd": "${workspaceFolder}/IcyPick.Fetcher",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
