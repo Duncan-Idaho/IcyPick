@@ -113,6 +113,7 @@ namespace IcyPick.Fetcher
         {
             File.WriteAllText(options.CurrentValue.DataOut, JsonSerializer.Serialize(data, new JsonSerializerOptions()
             {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             }));
         }
