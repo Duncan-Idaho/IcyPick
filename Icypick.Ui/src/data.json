@@ -1792,9 +1792,48 @@
         ],
         "counterSource": "Varian, independently from the Build used, is countered by Heroes\nwho are able to kite him due to their range (such as Hanzo\nwho can also use  Sonic Arrow to deny a flank)\nand/or Heroes that have tools to drastically compromise his already low\nmobility (such as Garrosh).\n\nTaunt Build is countered by Heroes who have a tool to remove his\nTaunt (such as Anduin\nwith  Leap of Faith) and/or that have something\nto counter the burst damage that will come\nfrom his team (like Uther because he provides Armor\nto allied Heroes via  Devotion).\n\nColossus Smash Build is countered by Heroes that have something to mitigate\nthe burst damage that will come from him and his team\n(for example Medivh\nbecause  Force of Will provides Protected,\na status effect that has no direct counters).\n\nTwin Blades Build heavily suffers from Heroes that can reduce his Attack Speed,\ncrowd control him, and/or burst\nhim down. Blinds are good against him as well."
       },
-      "conditionsForGeneralTier": {},
-      "conditionsForMasterTier": {},
-      "conditionsForAramTier": {}
+      "conditionsForGeneralTier": {
+        "taunt": {
+          "tier": "decent-tier-2",
+          "banRecommended": false
+        },
+        "twin": {
+          "tier": "decent-tier-2",
+          "banRecommended": false
+        },
+        "colossus": {
+          "tier": "decent-tier-2",
+          "banRecommended": false
+        }
+      },
+      "conditionsForMasterTier": {
+        "taunt": {
+          "tier": "good-tier-1",
+          "banRecommended": false
+        },
+        "twin": {
+          "tier": "mediocre-tier-3",
+          "banRecommended": false
+        },
+        "colossus": {
+          "tier": "mediocre-tier-3",
+          "banRecommended": false
+        }
+      },
+      "conditionsForAramTier": {
+        "taunt": {
+          "tier": "decent-tier-2",
+          "banRecommended": false
+        },
+        "twin": {
+          "tier": "decent-tier-2",
+          "banRecommended": false
+        },
+        "colossus": {
+          "tier": "mediocre-tier-3",
+          "banRecommended": false
+        }
+      }
     },
     {
       "id": "xul",

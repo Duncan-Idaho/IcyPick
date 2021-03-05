@@ -166,10 +166,11 @@ namespace IcyPick.Fetcher.Repositories
             {
                 var prefixedId = node.GetAttributeValue("id", null)
                     ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an an id");
-                var id = prefixedId["ranking-".Length..];
+                var originalId = prefixedId["ranking-".Length..];
                 var isBanRecommended = node.SelectNodes(".//*[contains(@class, 'htl_ban_true')]")?.Any() == true;
 
-                var hero = new Tier.Hero(id, isBanRecommended, ExtractHeroCondition(id, node));
+                var (id, condition) = ExtractHeroIdAndCondition(originalId);
+                var hero = new Tier.Hero(id, isBanRecommended, condition);
 
                 var tierNode = node.SelectSingleNode("(ancestor::*[@class='htl']/preceding-sibling::*[@class='heading_container heading_number_2'])[last()]")
                     ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} parent htl's to be preceded by a heading_container");
@@ -180,14 +181,14 @@ namespace IcyPick.Fetcher.Repositories
                 return (tierName, hero);
             }
 
-            static string? ExtractHeroCondition(string heroId, HtmlNode node)
+            static (string id, string? condition) ExtractHeroIdAndCondition(string heroId)
             {
                 return heroId switch
                 {
-                    "varian" when node.HasClass("htl_varian_taunt") => "taunt",
-                    "varian" when node.HasClass("htl_varian_twin") => "twin",
-                    "varian" when node.HasClass("htl_varian_colossus") => "colossus",
-                    _ => null
+                    "varian-taunt" => ("varian", "taunt"),
+                    "varian-twin" => ("varian", "twin"),
+                    "varian-colossus" => ("varian", "colossus"),
+                    _ => (heroId, null)
                 };
             }
         }
