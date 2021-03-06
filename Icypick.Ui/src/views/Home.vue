@@ -1,6 +1,6 @@
 <template>
   <div class="map-selected">
-    <map-button :map="selectedMap" disabled bar/>
+    <map-button :map="selectedMap" bar @click="unselectMap"/>
   </div>
   <div class="main-area">
     <map-selector v-model="selectedMap"/>
@@ -24,6 +24,11 @@ export default defineComponent({
   data() {
     return {
       selectedMap: null
+    }
+  },
+  methods: {
+    unselectMap() {
+      this.selectedMap = null
     }
   }
 });
