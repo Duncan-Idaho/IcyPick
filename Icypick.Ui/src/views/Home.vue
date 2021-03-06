@@ -1,6 +1,7 @@
 <template>
-  <h1 v-if="selectedMap">{{ selectedMap.name }}</h1>
-  <h1 v-else>Please select a map</h1>
+  <div class="map-selected">
+    <map-button :map="selectedMap" disabled bar/>
+  </div>
   <div class="main-area">
     <map-selector v-model="selectedMap"/>
   </div>
@@ -11,12 +12,14 @@ import { defineComponent } from 'vue';
 import HeroSelector from '@/components/HeroSelector.vue'
 // import { maps } from '@/data.json'
 import MapSelector from '@/components/MapSelector.vue';
+import MapButton from '@/components/Map.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
     // HeroSelector,
-    MapSelector,
+    MapButton,
+    MapSelector
   },
   data() {
     return {
@@ -28,6 +31,10 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .main-area {
+  display: flex;
+  justify-content: center;
+}
+.map-selected {
   display: flex;
   justify-content: center;
 }

@@ -1,6 +1,7 @@
 <template>
   <div class="map-section">
-    <Map v-for="map in maps" :key="map.id" :map="map" @click="onMapClick(map)" readonly/>
+    <Map v-for="map in maps" :key="map.id" :map="map" @click="onMapClick(map)"/>
+    <Map @click="onMapClick(map)"/>
   </div>
 </template>
 
