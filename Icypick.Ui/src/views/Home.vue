@@ -1,6 +1,8 @@
 <template>
+  <h1 v-if="selectedMap">{{ selectedMap.name }}</h1>
+  <h1 v-else>Please select a map</h1>
   <div class="main-area">
-    <map-selector/>
+    <map-selector v-model="selectedMap"/>
   </div>
 </template>
 
@@ -15,6 +17,11 @@ export default defineComponent({
   components: {
     // HeroSelector,
     MapSelector,
+  },
+  data() {
+    return {
+      selectedMap: null
+    }
   }
 });
 </script>

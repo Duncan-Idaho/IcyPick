@@ -1,22 +1,34 @@
 <template>
   <div class="map-section">
-    <Map v-for="map in maps" :key="map.id" :map="map"/>
+    <Map v-for="map in maps" :key="map.id" :map="map" @click="onMapClick(map)" readonly/>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import Map from '@/components/Map.vue'
+import { defineComponent, PropType } from 'vue';
+import MapButton from '@/components/Map.vue'
+import { Map } from '@/data'
 import { maps } from '@/data.json'
 
 export default defineComponent({
   name: 'MapSelector',
+  props: {
+    modelValue: {
+      type: Object as PropType<Map>
+    }
+  },
+  emits: ['update:modelValue'],
   components: {
-    Map,
+    Map: MapButton,
   },
   data() { 
     return {
       maps
+    }
+  },
+  methods: {
+    onMapClick(map: Map) {
+      this.$emit('update:modelValue', map)
     }
   }
 })

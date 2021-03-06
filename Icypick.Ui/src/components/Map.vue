@@ -1,13 +1,13 @@
 <template>
-  <div class="map" :style="{     
+  <button class="map" :style="{     
     backgroundImage: 
       `linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)), 
       url('${backgroundImage}')` 
-  }">
+  }" @click="click">
     <span>
       {{ map.name }}
     </span>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -46,5 +46,14 @@ export default defineComponent({
   color: white;
   font-weight: bold;
   font-size: 1.33rem;
+
+  // button reset
+  box-sizing: content-box;
+  padding: 0px;
+  outline: none;
+
+  &:focus {
+    border: 2px solid rgba(138, 150, 255, 1);
+  }
 }
 </style>
