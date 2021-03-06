@@ -1,17 +1,20 @@
 <template>
   <div class="main-area">
-    <hero-selector/>
+    <map-selector/>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HeroSelector from '@/components/HeroSelector.vue'
+// import { maps } from '@/data.json'
+import MapSelector from '@/components/MapSelector.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
-    HeroSelector,
+    // HeroSelector,
+    MapSelector,
   }
 });
 </script>
