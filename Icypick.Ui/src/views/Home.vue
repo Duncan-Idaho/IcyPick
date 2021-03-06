@@ -5,12 +5,14 @@
     </div>
     <div class="body">
       <div class="allies-area">
+        <HeroJaggedRows :heroes="allies" :row-size="1"/>
       </div>
       <div class="main-area">
         <MapSelector v-model="selectedMap"/>
         <HeroSelector />
       </div>
       <div class="ennemies-area">
+        <HeroJaggedRows :heroes="ennemies" :row-size="1"/>
       </div>
     </div>
   </div>
@@ -19,20 +21,24 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HeroSelector from '@/components/HeroSelector.vue'
-// import { maps } from '@/data.json'
+import { heroes } from '@/data.json'
 import MapSelector from '@/components/MapSelector.vue';
 import MapSlot from '@/components/MapSlot.vue';
+import HeroJaggedRows from '@/components/HeroJaggedRows.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
     HeroSelector,
     MapSlot,
-    MapSelector
+    MapSelector,
+    HeroJaggedRows
   },
   data() {
     return {
-      selectedMap: null
+      selectedMap: null,
+      allies: heroes.slice(0, 5),
+      ennemies: heroes.slice(5, 10)
     }
   },
   methods: {
@@ -64,7 +70,15 @@ export default defineComponent({
 }
 
 .allies-area, .ennemies-area {
-  width: 40%;
+  flex: 0 0 15rem;
+}
+
+.allies-area {
+  text-align: left;
+}
+
+.ennemies-area {
+  text-align: right;
 }
 
 .main-area {
