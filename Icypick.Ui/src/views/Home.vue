@@ -1,9 +1,12 @@
 <template>
   <div class="map-selected">
-    <MapButton :map="selectedMap" bar @click="unselectMap"/>
+    <MapSlot :map="selectedMap" bar @click="unselectMap"/>
   </div>
   <div class="main-area">
     <MapSelector v-model="selectedMap"/>
+  </div>
+  <div class="main-area">
+    <HeroSelector />
   </div>
 </template>
 
@@ -12,13 +15,13 @@ import { defineComponent } from 'vue';
 import HeroSelector from '@/components/HeroSelector.vue'
 // import { maps } from '@/data.json'
 import MapSelector from '@/components/MapSelector.vue';
-import MapButton from '@/components/MapButton.vue';
+import MapSlot from '@/components/MapSlot.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
-    // HeroSelector,
-    MapButton,
+    HeroSelector,
+    MapSlot,
     MapSelector
   },
   data() {

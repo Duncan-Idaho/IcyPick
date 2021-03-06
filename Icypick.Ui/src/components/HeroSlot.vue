@@ -14,7 +14,7 @@ import data from '@/data.json'
 type type = 'ally' | 'ennemy' | undefined;
 
 export default defineComponent({
-  name: 'Hero',
+  name: 'HeroSlot',
   props: {
     heroId: {
       type: String,

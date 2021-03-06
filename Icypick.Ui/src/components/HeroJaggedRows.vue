@@ -1,11 +1,11 @@
 <template>
   <template v-for="(group, groupIndex) in groups" :key="groupIndex">
     <div class="long-line">
-      <Hero v-for="hero in group.longLine" :key="hero.id" :hero-id="hero.id"/>
+      <HeroSlot v-for="hero in group.longLine" :key="hero.id" :hero-id="hero.id"/>
       <div class="gap" v-if="group.longLine.length % 2 !== 1"/>
     </div>
     <div class="short-line" v-if="group.shortLine.length">
-      <Hero v-for="hero in group.shortLine" :key="hero.id" :hero-id="hero.id"/>
+      <HeroSlot v-for="hero in group.shortLine" :key="hero.id" :hero-id="hero.id"/>
       <div class="gap" v-if="group.shortLine.length % 2 !== 0"/>
     </div>
   </template>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType  } from 'vue';
-import HeroView from './Hero.vue'
+import HeroSlot from './HeroSlot.vue'
 import { Hero } from '@/data'
 
 export default defineComponent({
@@ -29,7 +29,7 @@ export default defineComponent({
     }
   },
   components: {
-    Hero: HeroView,
+    HeroSlot,
   },
   computed: {
     groupRowSize(): number {
