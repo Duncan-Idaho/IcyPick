@@ -3,7 +3,7 @@
     <div class="role-section" v-for="role in roles" :key="role.id">
       <img class="role" :src="require(`@/assets/${role.id}.png`)" />
       <div>
-        <hero-jagged-rows :heroes="role.heroes" :rowSize="7"/>
+        <HeroJaggedRows :heroes="role.heroes" :row-size="7"/>
       </div>
     </div>
   </div>

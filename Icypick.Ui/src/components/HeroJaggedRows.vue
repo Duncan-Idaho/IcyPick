@@ -1,11 +1,11 @@
 <template>
   <template v-for="(group, groupIndex) in groups" :key="groupIndex">
     <div class="long-line">
-      <hero v-for="hero in group.longLine" :key="hero.id" :heroId="hero.id"/>
+      <Hero v-for="hero in group.longLine" :key="hero.id" :hero-id="hero.id"/>
       <div class="gap" v-if="group.longLine.length % 2 !== 1"/>
     </div>
     <div class="short-line" v-if="group.shortLine.length">
-      <hero v-for="hero in group.shortLine" :key="hero.id" :heroId="hero.id"/>
+      <Hero v-for="hero in group.shortLine" :key="hero.id" :hero-id="hero.id"/>
       <div class="gap" v-if="group.shortLine.length % 2 !== 0"/>
     </div>
   </template>

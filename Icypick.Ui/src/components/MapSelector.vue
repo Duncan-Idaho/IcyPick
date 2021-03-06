@@ -1,13 +1,13 @@
 <template>
   <div class="map-section">
-    <Map v-for="map in maps" :key="map.id" :map="map" @click="onMapClick(map)"/>
-    <Map @click="onMapClick(map)"/>
+    <MapButton v-for="map in maps" :key="map.id" :map="map" @click="onMapClick(map)"/>
+    <MapButton @click="onMapClick(map)"/>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import MapButton from '@/components/Map.vue'
+import MapButton from '@/components/MapButton.vue'
 import { Map } from '@/data'
 import { maps } from '@/data.json'
 
@@ -20,7 +20,7 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   components: {
-    Map: MapButton,
+    MapButton,
   },
   data() { 
     return {

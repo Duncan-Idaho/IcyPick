@@ -27,7 +27,7 @@ import { defineComponent, PropType } from 'vue';
 import { Map } from '@/data'
 
 export default defineComponent({
-  name: 'Map',
+  name: 'MapButton',
   props: {
     map: {
       type: Object as PropType<Map>,
