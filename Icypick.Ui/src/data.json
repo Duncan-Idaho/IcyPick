@@ -3,7 +3,7 @@
     {
       "id": "anubarak",
       "name": "Anub\u0027arak",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/anubarak-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -70,7 +70,7 @@
     {
       "id": "arthas",
       "name": "Arthas",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/arthas-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -140,7 +140,7 @@
     {
       "id": "blaze",
       "name": "Blaze",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/blaze-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -204,7 +204,7 @@
     {
       "id": "cho",
       "name": "Cho",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/cho-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -273,7 +273,7 @@
     {
       "id": "diablo",
       "name": "Diablo",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/diablo-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -340,7 +340,7 @@
     {
       "id": "e-t-c",
       "name": "E.T.C.",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/e-t-c-build-guide",
       "mapPreference": {
         "strongerMaps": [],
@@ -409,7 +409,7 @@
     {
       "id": "garrosh",
       "name": "Garrosh",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/garrosh-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -471,7 +471,7 @@
     {
       "id": "johanna",
       "name": "Johanna",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/johanna-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -532,7 +532,7 @@
     {
       "id": "malganis",
       "name": "Mal\u0027Ganis",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/malganis-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -594,7 +594,7 @@
     {
       "id": "mei",
       "name": "Mei",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/mei-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -659,7 +659,7 @@
     {
       "id": "muradin",
       "name": "Muradin",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/muradin-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -724,7 +724,7 @@
     {
       "id": "stitches",
       "name": "Stitches",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/stitches-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -788,7 +788,7 @@
     {
       "id": "tyrael",
       "name": "Tyrael",
-      "category": "tanks",
+      "role": "tank",
       "guideUri": "https://www.icy-veins.com/heroes/tyrael-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -850,7 +850,7 @@
     {
       "id": "artanis",
       "name": "Artanis",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/artanis-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -917,7 +917,7 @@
     {
       "id": "chen",
       "name": "Chen",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/chen-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -983,7 +983,7 @@
     {
       "id": "deathwing",
       "name": "Deathwing",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/deathwing-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1046,7 +1046,7 @@
     {
       "id": "dehaka",
       "name": "Dehaka",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/dehaka-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1110,7 +1110,7 @@
     {
       "id": "dva",
       "name": "D.Va",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/dva-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1174,7 +1174,7 @@
     {
       "id": "gazlowe",
       "name": "Gazlowe",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/gazlowe-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1241,7 +1241,7 @@
     {
       "id": "hogger",
       "name": "Hogger",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/hogger-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1299,7 +1299,7 @@
     {
       "id": "imperius",
       "name": "Imperius",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/imperius-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1367,7 +1367,7 @@
     {
       "id": "leoric",
       "name": "Leoric",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/leoric-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1430,7 +1430,7 @@
     {
       "id": "malthael",
       "name": "Malthael",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/malthael-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1498,7 +1498,7 @@
     {
       "id": "ragnaros",
       "name": "Ragnaros",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/ragnaros-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1562,7 +1562,7 @@
     {
       "id": "rexxar",
       "name": "Rexxar",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/rexxar-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1621,7 +1621,7 @@
     {
       "id": "sonya",
       "name": "Sonya",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/sonya-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1686,7 +1686,7 @@
     {
       "id": "thrall",
       "name": "Thrall",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/thrall-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1750,7 +1750,7 @@
     {
       "id": "varian",
       "name": "Varian",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/varian-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1838,7 +1838,7 @@
     {
       "id": "xul",
       "name": "Xul",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/xul-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1902,7 +1902,7 @@
     {
       "id": "yrel",
       "name": "Yrel",
-      "category": "bruisers",
+      "role": "bruiser",
       "guideUri": "https://www.icy-veins.com/heroes/yrel-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -1964,7 +1964,7 @@
     {
       "id": "azmodan",
       "name": "Azmodan",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/azmodan-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2031,7 +2031,7 @@
     {
       "id": "cassia",
       "name": "Cassia",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/cassia-build-guide",
       "mapPreference": {
         "strongerMaps": [],
@@ -2095,7 +2095,7 @@
     {
       "id": "chromie",
       "name": "Chromie",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/chromie-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2156,7 +2156,7 @@
     {
       "id": "falstad",
       "name": "Falstad",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/falstad-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2220,7 +2220,7 @@
     {
       "id": "fenix",
       "name": "Fenix",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/fenix-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2283,7 +2283,7 @@
     {
       "id": "gall",
       "name": "Gall",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/gall-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2352,7 +2352,7 @@
     {
       "id": "genji",
       "name": "Genji",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/genji-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2414,7 +2414,7 @@
     {
       "id": "greymane",
       "name": "Greymane",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/greymane-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2482,7 +2482,7 @@
     {
       "id": "guldan",
       "name": "Gul\u0027dan",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/guldan-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2543,7 +2543,7 @@
     {
       "id": "hanzo",
       "name": "Hanzo",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/hanzo-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2607,7 +2607,7 @@
     {
       "id": "jaina",
       "name": "Jaina",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/jaina-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2679,7 +2679,7 @@
     {
       "id": "junkrat",
       "name": "Junkrat",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/junkrat-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2743,7 +2743,7 @@
     {
       "id": "kaelthas",
       "name": "Kael\u0027thas",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/kaelthas-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2806,7 +2806,7 @@
     {
       "id": "kel-thuzad",
       "name": "Kel\u0027Thuzad",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/kel-thuzad-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2877,7 +2877,7 @@
     {
       "id": "li-ming",
       "name": "Li-Ming",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/li-ming-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -2946,7 +2946,7 @@
     {
       "id": "lunara",
       "name": "Lunara",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/lunara-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3008,7 +3008,7 @@
     {
       "id": "mephisto",
       "name": "Mephisto",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/mephisto-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3072,7 +3072,7 @@
     {
       "id": "nazeebo",
       "name": "Nazeebo",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/nazeebo-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3132,7 +3132,7 @@
     {
       "id": "nova",
       "name": "Nova",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/nova-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3198,7 +3198,7 @@
     {
       "id": "orphea",
       "name": "Orphea",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/orphea-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3266,7 +3266,7 @@
     {
       "id": "probius",
       "name": "Probius",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/probius-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3330,7 +3330,7 @@
     {
       "id": "raynor",
       "name": "Raynor",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/raynor-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3391,7 +3391,7 @@
     {
       "id": "sgt-hammer",
       "name": "Sgt. Hammer",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/sgt-hammer-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3455,7 +3455,7 @@
     {
       "id": "sylvanas",
       "name": "Sylvanas",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/sylvanas-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3523,7 +3523,7 @@
     {
       "id": "tassadar",
       "name": "Tassadar",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/tassadar-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3588,7 +3588,7 @@
     {
       "id": "tracer",
       "name": "Tracer",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/tracer-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3655,7 +3655,7 @@
     {
       "id": "tychus",
       "name": "Tychus",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/tychus-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3717,7 +3717,7 @@
     {
       "id": "valla",
       "name": "Valla",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/valla-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3781,7 +3781,7 @@
     {
       "id": "zagara",
       "name": "Zagara",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/zagara-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3843,7 +3843,7 @@
     {
       "id": "zuljin",
       "name": "Zul\u0027jin",
-      "category": "ranged assassins",
+      "role": "ranged assassin",
       "guideUri": "https://www.icy-veins.com/heroes/zuljin-build-guide",
       "mapPreference": {
         "strongerMaps": [],
@@ -3907,7 +3907,7 @@
     {
       "id": "alarak",
       "name": "Alarak",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/alarak-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -3970,7 +3970,7 @@
     {
       "id": "illidan",
       "name": "Illidan",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/illidan-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4040,7 +4040,7 @@
     {
       "id": "kerrigan",
       "name": "Kerrigan",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/kerrigan-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4105,7 +4105,7 @@
     {
       "id": "maiev",
       "name": "Maiev",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/maiev-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4174,7 +4174,7 @@
     {
       "id": "murky",
       "name": "Murky",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/murky-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4239,7 +4239,7 @@
     {
       "id": "qhira",
       "name": "Qhira",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/qhira-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4303,7 +4303,7 @@
     {
       "id": "samuro",
       "name": "Samuro",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/samuro-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4370,7 +4370,7 @@
     {
       "id": "the-butcher",
       "name": "The Butcher",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/the-butcher-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4433,7 +4433,7 @@
     {
       "id": "valeera",
       "name": "Valeera",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/valeera-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4497,7 +4497,7 @@
     {
       "id": "zeratul",
       "name": "Zeratul",
-      "category": "melee assassins",
+      "role": "melee assassin",
       "guideUri": "https://www.icy-veins.com/heroes/zeratul-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4567,7 +4567,7 @@
     {
       "id": "alexstrasza",
       "name": "Alexstrasza",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/alexstrasza-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4631,7 +4631,7 @@
     {
       "id": "ana",
       "name": "Ana",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/ana-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4692,7 +4692,7 @@
     {
       "id": "anduin",
       "name": "Anduin",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/anduin-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4755,7 +4755,7 @@
     {
       "id": "auriel",
       "name": "Auriel",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/auriel-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4819,7 +4819,7 @@
     {
       "id": "brightwing",
       "name": "Brightwing",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/brightwing-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4882,7 +4882,7 @@
     {
       "id": "deckard",
       "name": "Deckard",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/deckard-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -4952,7 +4952,7 @@
     {
       "id": "kharazim",
       "name": "Kharazim",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/kharazim-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5015,7 +5015,7 @@
     {
       "id": "li-li",
       "name": "Li Li",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/li-li-build-guide",
       "mapPreference": {
         "strongerMaps": [],
@@ -5077,7 +5077,7 @@
     {
       "id": "lt-morales",
       "name": "Lt. Morales",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/lt-morales-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5139,7 +5139,7 @@
     {
       "id": "lucio",
       "name": "L\u00FAcio",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/lucio-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5201,7 +5201,7 @@
     {
       "id": "malfurion",
       "name": "Malfurion",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/malfurion-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5271,7 +5271,7 @@
     {
       "id": "rehgar",
       "name": "Rehgar",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/rehgar-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5333,7 +5333,7 @@
     {
       "id": "stukov",
       "name": "Stukov",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/stukov-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5394,7 +5394,7 @@
     {
       "id": "tyrande",
       "name": "Tyrande",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/tyrande-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5459,7 +5459,7 @@
     {
       "id": "uther",
       "name": "Uther",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/uther-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5524,7 +5524,7 @@
     {
       "id": "whitemane",
       "name": "Whitemane",
-      "category": "healers",
+      "role": "healer",
       "guideUri": "https://www.icy-veins.com/heroes/whitemane-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5585,7 +5585,7 @@
     {
       "id": "abathur",
       "name": "Abathur",
-      "category": "supports",
+      "role": "support",
       "guideUri": "https://www.icy-veins.com/heroes/abathur-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5654,7 +5654,7 @@
     {
       "id": "medivh",
       "name": "Medivh",
-      "category": "supports",
+      "role": "support",
       "guideUri": "https://www.icy-veins.com/heroes/medivh-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5719,7 +5719,7 @@
     {
       "id": "the-lost-vikings",
       "name": "The Lost Vikings",
-      "category": "supports",
+      "role": "support",
       "guideUri": "https://www.icy-veins.com/heroes/the-lost-vikings-build-guide",
       "mapPreference": {
         "strongerMaps": [
@@ -5786,7 +5786,7 @@
     {
       "id": "zarya",
       "name": "Zarya",
-      "category": "supports",
+      "role": "support",
       "guideUri": "https://www.icy-veins.com/heroes/zarya-build-guide",
       "mapPreference": {
         "strongerMaps": [

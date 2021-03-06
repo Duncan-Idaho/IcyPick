@@ -11,7 +11,7 @@ export interface Map {
 export interface Hero {
   id: string;
   name: string;
-  category: string;
+  role: string;
   guideUri: string;
   mapPreference: HeroMapPreference;
   synergiesAndCounter: SynergiesAndCounter;

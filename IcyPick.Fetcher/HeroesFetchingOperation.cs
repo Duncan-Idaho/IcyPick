@@ -51,7 +51,7 @@ namespace IcyPick.Fetcher
                 => new Output.Hero(
                     guide.Id,
                     guide.Name,
-                    guide.Category,
+                    guide.Role,
                     guide.GuideUri,
                     Output.HeroMapPreference.FromModel(guide.MapPreference),
                     Output.HeroSynergiesAndCounter.FromModel(guide.SynergiesAndCounter),

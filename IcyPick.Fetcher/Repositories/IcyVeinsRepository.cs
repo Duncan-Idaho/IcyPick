@@ -53,15 +53,27 @@ namespace IcyPick.Fetcher.Repositories
                     ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a href");
                 var iconUrl = node.SelectSingleNode("a/img").GetAttributeValue("src", null)
                     ?? throw new InvalidOperationException($"Parsing failed. Expected ${node.OuterHtml} to contain an a/img src");
-                var category = node.SelectSingleNode("ancestor::*[@class='nav_entry nav_entry_with_content']/*[@class='header']").InnerText.ToLower();
+                var role = node.SelectSingleNode("ancestor::*[@class='nav_entry nav_entry_with_content']/*[@class='header']").InnerText.ToLower();
 
                 return new Hero(
                     idFinder.Match(guideUrl).Groups[1].Value,
                     node.InnerText.Trim(),
-                    category,
+                    NormalizeRole(role),
                     new Uri(baseUri, guideUrl),
                     new Uri(baseUri, iconUrl));
             }
+
+            static string NormalizeRole(string role)
+                => role switch
+                {
+                    "bruisers" => "bruiser",
+                    "healers" => "healer",
+                    "melee assassins" => "melee assassin",
+                    "ranged assassins" => "ranged assassin",
+                    "supports" => "support",
+                    "tanks" => "tank",
+                    _ => throw new InvalidOperationException($"Role ${role} is unknown")
+                };
         }
 
         public async Task<HeroGuide> GetHeroGuideAsync(Hero hero, CancellationToken cancellationToken)

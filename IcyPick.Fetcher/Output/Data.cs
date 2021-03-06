@@ -13,7 +13,7 @@ namespace IcyPick.Fetcher.Output
     public record Hero(
         string Id,
         string Name,
-        string Category,
+        string Role,
         Uri GuideUri,
         HeroMapPreference MapPreference,
         HeroSynergiesAndCounter SynergiesAndCounter,

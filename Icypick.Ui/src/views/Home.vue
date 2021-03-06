@@ -1,8 +1,8 @@
 <template>
-  <div class="central" v-for="category in categories" :key="category.id">
-    <h1>{{ category.id }} ({{category.heroes.length }})</h1>
+  <div class="central" v-for="role in roles" :key="role.id">
+    <h1>{{ role.id }} ({{role.heroes.length }})</h1>
     <div>
-    <hero-jagged-rows :heroes="category.heroes" :rowSize="7"/>
+    <hero-jagged-rows :heroes="role.heroes" :rowSize="7"/>
     </div>
   </div>
 </template>
@@ -18,11 +18,11 @@ export default defineComponent({
     HeroJaggedRows,
   },
   data() { 
-    const categories = [...new Set(heroes.map(hero => hero.category))]
+    const roles = [...new Set(heroes.map(hero => hero.role))]
     return {
-      categories: categories.map(category => ({
-        id: category,
-        heroes: heroes.filter(hero => hero.category === category)
+      roles: roles.map(role => ({
+        id: role,
+        heroes: heroes.filter(hero => hero.role === role)
       })),
       heroes: heroes
     }
