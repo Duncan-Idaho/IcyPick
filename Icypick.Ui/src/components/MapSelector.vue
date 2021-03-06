@@ -38,7 +38,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 
 .map-section {
-  width: 70%;
   display: flex;
   flex-wrap: wrap;
 }

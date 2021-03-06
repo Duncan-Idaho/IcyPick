@@ -1,12 +1,18 @@
 <template>
-  <div class="map-selected">
-    <MapSlot :map="selectedMap" bar @click="unselectMap"/>
-  </div>
-  <div class="main-area">
-    <MapSelector v-model="selectedMap"/>
-  </div>
-  <div class="main-area">
-    <HeroSelector />
+  <div class="layout">
+    <div class="header">
+      <MapSlot :map="selectedMap" bar @click="unselectMap"/>
+    </div>
+    <div class="body">
+      <div class="allies-area">
+      </div>
+      <div class="main-area">
+        <MapSelector v-model="selectedMap"/>
+        <HeroSelector />
+      </div>
+      <div class="ennemies-area">
+      </div>
+    </div>
   </div>
 </template>
 
@@ -37,13 +43,33 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.main-area {
+<style lang="scss" scoped>*
+.layout {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 100%;
+}
+
+.header {
   display: flex;
   justify-content: center;
 }
-.map-selected {
+
+.body {
   display: flex;
-  justify-content: center;
+  flex-flow: row nowrap;
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.allies-area, .ennemies-area {
+  width: 40%;
+}
+
+.main-area {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
 }
 </style>
