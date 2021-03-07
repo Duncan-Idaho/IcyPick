@@ -40,44 +40,46 @@ export default defineComponent({
 <style scoped lang="scss">
 @use "sass:math";
 
-@mixin hexagon($width) {
-  clip-path: polygon(
-    50% 0,
-    100% 25%,
-    100% 75%,
-    50% 100%,
-    0% 75%,
-    0% 25%);
-    
-  $height: $width / math.sqrt(3) * 2;
-  width: $width;
-  height: $height;
-}
+$hero-width: var(--hero-width, 5rem);
 
-@mixin hero-border($width, $border, $color) {
+.hero-border {
+  --hexagon-border: 0.2rem;
+  background-color: rgb(38, 38, 39);
+  &.ally {
+    --hexagon-border: 0.3rem;
+    background-color: rgb(99, 99, 209);
+  }
+  &.ennemy {
+    --hexagon-border: 0.3rem;
+    background-color: rgb(209, 99, 99);
+  }
+
   display: inline-block;
-  background-color: $color;
-
   position: relative;
-  @include hexagon($width);
+  --hexagon-width: #{$hero-width};
 
   img {
     object-fit: cover;
 
     position: absolute;
-    left: $border;
-    top: $border;
-    @include hexagon($width - $border * 2);
+    left: var(--hexagon-border);
+    top: var(--hexagon-border);
+    --hexagon-width: calc(#{$hero-width} - var(--hexagon-border) * 2);
   }
-}
 
-.hero-border {
-  &.ally {
-    @include hero-border(5rem, 0.3rem, rgb(99, 99, 209));  
+  // Hexagon shape
+  &, img {
+    clip-path: polygon(
+      50% 0,
+      100% 25%,
+      100% 75%,
+      50% 100%,
+      0% 75%,
+      0% 25%);
+
+    width: var(--hexagon-width);
+    height: calc(var(--hexagon-width) / #{math.sqrt(3)} * 2);
   }
-  &.ennemy {
-    @include hero-border(5rem, 0.3rem, rgb(209, 99, 99));  
-  }
-  @include hero-border(5rem, 0.2rem, rgb(38, 38, 39));
+
 }
 </style>

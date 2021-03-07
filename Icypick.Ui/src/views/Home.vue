@@ -73,6 +73,7 @@ export default defineComponent({
 
 .allies-area, .ennemies-area {
   flex: 0 0 15rem;
+  --hero-width: 10rem;
 }
 
 .allies-area {

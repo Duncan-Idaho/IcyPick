@@ -67,22 +67,24 @@ export default defineComponent({
 <style lang="scss" scoped>
 @use "sass:math";
 
-$width: 5rem;
-$height: $width / math.sqrt(3) * 2;
-$rentrage: $height / 4;
+$hero-width: var(--hero-width, 5rem);
+$hero-height: calc(#{$hero-width} / #{math.sqrt(3)} * 2);
+
+$interlocking-height: calc(#{$hero-height} / 4);
+$shift: calc(#{$hero-width} / 2);
 
 .long-line, .short-line {
   font-size:0px;
 }
 .long-line + .short-line, .short-line + .long-line {
-  margin-top: -$rentrage;
+  margin-top: calc(-1 * #{$interlocking-height});
 }
 .short-line {
-  margin-left: 2.5rem;
-  margin-right: 2.5rem;
+  margin-left: $shift;
+  margin-right: $shift;
 }
 .gap {
   display:inline-block;
-  width: $width;
+  width: $hero-width;
 }
 </style>
