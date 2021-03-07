@@ -8,8 +8,8 @@
         <HeroJaggedRows :heroes="allies" :row-size="1"/>
       </div>
       <div class="main-area">
-        <MapSelector v-model="selectedMap"/>
-        <HeroSelector />
+        <MapSelector v-if="!selectedMap" v-model="selectedMap"/>
+        <HeroSelector v-else />
       </div>
       <div class="ennemies-area">
         <HeroJaggedRows :heroes="ennemies" :row-size="1"/>
@@ -51,10 +51,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>*
 .layout {
-  display: flex;
-  flex-flow: column nowrap;
   width: 100%;
   height: 100%;
+  
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .header {
@@ -63,10 +64,11 @@ export default defineComponent({
 }
 
 .body {
+  flex: 1;
+  overflow: hidden;
+  
   display: flex;
   flex-flow: row nowrap;
-  flex: 1;
-  overflow-y: scroll;
 }
 
 .allies-area, .ennemies-area {
@@ -82,8 +84,11 @@ export default defineComponent({
 }
 
 .main-area {
+  flex: 1;
+  overflow: auto;
+
   display: flex;
   flex-flow: column nowrap;
-  align-items: center;
+  align-items: center;  
 }
 </style>
