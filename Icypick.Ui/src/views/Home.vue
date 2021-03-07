@@ -46,10 +46,9 @@ type SlotId = GenericSlotId | HeroSlotId
 
 interface Data {
   selectedMap: Map | null;
-  allies: (Hero | null)[];
-  ennemies: (Hero | null)[];
+  allies: (Hero | undefined)[];
+  ennemies: (Hero | undefined)[];
   selectedSlot: SlotId;
-  selectedHero: Hero | null;
 }
 
 function getIndexFor(slotId: SlotId, kind: 'ally' | 'ennemy') {
@@ -69,18 +68,39 @@ export default defineComponent({
   data(): Data {
     return {
       selectedMap: null,
-      allies: Array(Math.ceil(5)).fill(null),
-      ennemies: Array(Math.ceil(5)).fill(null),
-      selectedSlot: GenericSlotId.Map,
-      selectedHero: null
+      allies: Array(Math.ceil(5)).fill(undefined),
+      ennemies: Array(Math.ceil(5)).fill(undefined),
+      selectedSlot: GenericSlotId.Map
     }
   },
   computed: {
     selectedAllySlot(): number | undefined {
-      return getIndexFor(this.selectedSlot, 'ally');
+      return getIndexFor(this.selectedSlot, 'ally')
     },
     selectedEnnemySlot(): number | undefined {
-      return getIndexFor(this.selectedSlot, 'ennemy');
+      return getIndexFor(this.selectedSlot, 'ennemy')
+    },
+    selectedHero: {
+      get(): Hero | undefined {
+        if (typeof this.selectedSlot === 'string')
+          return undefined
+
+        const slots: (Hero | undefined)[] = this.selectedSlot.kind === 'ally'
+          ? this.allies
+          : this.ennemies
+          
+        return slots[this.selectedSlot.index]
+      },
+      set(value: Hero |  undefined) {
+        if (typeof this.selectedSlot === 'string')
+          return
+
+        const slots: (Hero | undefined)[] = this.selectedSlot.kind === 'ally'
+          ? this.allies
+          : this.ennemies
+          
+        slots[this.selectedSlot.index] = value
+      }
     }
   },
   methods: {
@@ -100,8 +120,8 @@ export default defineComponent({
       if (!this.selectedMap) {
         this.selectedSlot = GenericSlotId.Map
       } else {
-        let firstAllyNotSelected = this.allies.indexOf(null);
-        let firstEnnemyNotSelected = this.ennemies.indexOf(null);
+        let firstAllyNotSelected = this.allies.indexOf(undefined);
+        let firstEnnemyNotSelected = this.ennemies.indexOf(undefined);
 
         if (firstAllyNotSelected === -1)
           firstAllyNotSelected = 5;
@@ -116,16 +136,24 @@ export default defineComponent({
     }
   },
   watch: {
-    allies() {
-      this.selectNextSlot();
+    allies: {
+      deep: true,
+      handler () {
+        this.selectNextSlot()
+      }
     },
-    ennemies() {
-      this.selectNextSlot();
+    ennemies: {
+      deep: true,
+      handler () {
+        this.selectNextSlot()
+      }
     },
-    selectedMap() {
-      this.selectNextSlot();
+    selectedMap: {
+      deep: true,
+      handler () {
+        this.selectNextSlot()
+      }
     }
-
   }
 });
 </script>
