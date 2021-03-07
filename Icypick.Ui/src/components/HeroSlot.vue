@@ -1,15 +1,15 @@
 <template>
   <div :class="['hero-border', type || '']">
-    <img
+    <img v-if="hero" class="hero-icon"
       :src="require(`@/assets/images/heroes/${hero.id}.jpg`)" 
       :alt="hero.name" :title="hero.name"/>
+    <span v-else class="hero-icon mdi mdi-help" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType  } from 'vue';
 import { Hero } from '@/data'
-import data from '@/data.json'
 
 type type = 'ally' | 'ennemy' | undefined;
 
@@ -17,8 +17,7 @@ export default defineComponent({
   name: 'HeroSlot',
   props: {
     hero: {
-      type: Object as PropType<Hero>,
-      required: true
+      type: Object as PropType<Hero | undefined>,
     },
     type: {
       type: String as PropType<type>,
@@ -50,17 +49,23 @@ $hero-width: var(--hero-width, 5rem);
   position: relative;
   --hexagon-width: #{$hero-width};
 
-  img {
+  .hero-icon {
     object-fit: cover;
+    background-color: #1a0a38;
+    color: white;
 
     position: absolute;
     left: var(--hexagon-border);
     top: var(--hexagon-border);
     --hexagon-width: calc(#{$hero-width} - var(--hexagon-border) * 2);
+    
+    // for mdi icon
+    text-align: center;
+    font-size: calc(#{$hero-width} * 0.5);
   }
 
   // Hexagon shape
-  &, img {
+  &, .hero-icon {
     clip-path: polygon(
       50% 0,
       100% 25%,
@@ -70,7 +75,10 @@ $hero-width: var(--hero-width, 5rem);
       0% 25%);
 
     width: var(--hexagon-width);
-    height: calc(var(--hexagon-width) / #{math.sqrt(3)} * 2);
+
+    $height: calc(var(--hexagon-width) / #{math.sqrt(3)} * 2);
+    height: $height; // for image
+    line-height: $height; // for mdi icon
   }
 
 }

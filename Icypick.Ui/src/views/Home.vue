@@ -37,8 +37,8 @@ export default defineComponent({
   data() {
     return {
       selectedMap: null,
-      allies: heroes.slice(0, 5),
-      ennemies: heroes.slice(5, 10)
+      allies: Array(Math.ceil(5)).fill(null),
+      ennemies: Array(Math.ceil(5)).fill(null)
     }
   },
   methods: {

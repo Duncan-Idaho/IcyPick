@@ -1,11 +1,11 @@
 <template>
   <template v-for="(group, groupIndex) in groups" :key="groupIndex">
     <div class="long-line">
-      <HeroSlot v-for="hero in group.longLine" :key="hero.id" :hero="hero"/>
+      <HeroSlot v-for="(hero, index) in group.longLine" :key="index" :hero="hero"/>
       <div class="gap" v-if="rowSize != 1 && group.longLine.length % 2 !== 1"/>
     </div>
     <div class="short-line" v-if="group.shortLine.length">
-      <HeroSlot v-for="hero in group.shortLine" :key="hero.id" :hero="hero"/>
+      <HeroSlot v-for="(hero, index) in group.shortLine" :key="index" :hero="hero"/>
       <div class="gap" v-if="rowSize != 1 && group.shortLine.length % 2 !== 0"/>
     </div>
   </template>
@@ -74,7 +74,7 @@ $interlocking-height: calc(#{$hero-height} / 4);
 $shift: calc(#{$hero-width} / 2);
 
 .long-line, .short-line {
-  font-size:0px;
+  line-height: 0px;
 }
 .long-line + .short-line, .short-line + .long-line {
   margin-top: calc(-1 * #{$interlocking-height});
