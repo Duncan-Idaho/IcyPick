@@ -30,8 +30,7 @@ export default defineComponent({
   name: 'MapButton',
   props: {
     map: {
-      type: Object as PropType<Map>,
-      required: true
+      type: Object as PropType<Map>
     },
     bar: {
       type: Boolean,
