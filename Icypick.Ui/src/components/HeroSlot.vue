@@ -1,5 +1,5 @@
 <template>
-  <div :class="['hero-border', type || '']">
+  <div :class="classes">
     <img v-if="hero" class="hero-icon"
       :src="require(`@/assets/images/heroes/${hero.id}.jpg`)" 
       :alt="hero.name" :title="hero.name"/>
@@ -11,17 +11,22 @@
 import { defineComponent, PropType  } from 'vue';
 import { Hero } from '@/data'
 
-type type = 'ally' | 'ennemy' | undefined;
-
 export default defineComponent({
   name: 'HeroSlot',
   props: {
     hero: {
       type: Object as PropType<Hero | undefined>,
     },
-    type: {
-      type: String as PropType<type>,
-      validator: (val: type) => !val || ['ally', 'ennemy'].includes(val)
+    selected: {
+      type: Boolean
+    }
+  },
+  computed: {
+    classes(): { [className: string]: boolean } {
+      return {
+        'hero-border': true,
+        'selected': this.selected
+      }
     }
   }
 });
@@ -41,6 +46,10 @@ $hero-width: var(--hero-width, 5rem);
     background-color: rgb(99, 99, 209);
   }
   &.ennemy {
+    --hexagon-border: 0.3rem;
+    background-color: rgb(209, 99, 99);
+  }
+  &.selected {
     --hexagon-border: 0.3rem;
     background-color: rgb(209, 99, 99);
   }
