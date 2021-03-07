@@ -16,21 +16,13 @@ type type = 'ally' | 'ennemy' | undefined;
 export default defineComponent({
   name: 'HeroSlot',
   props: {
-    heroId: {
-      type: String,
+    hero: {
+      type: Object as PropType<Hero>,
       required: true
     },
     type: {
       type: String as PropType<type>,
       validator: (val: type) => !val || ['ally', 'ennemy'].includes(val)
-    }
-  },
-  computed: {
-    hero(): Hero {
-      const hero = data.heroes.find(hero => hero.id === this.heroId)
-      if (hero === undefined)
-        throw new Error(`Hero id ${this.heroId} does not exist`);
-      return hero;
     }
   }
 });
