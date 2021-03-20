@@ -42,7 +42,7 @@ button {
   border: 2px solid rgba(255, 255, 255, 0.7);
 
   height: 3rem;
-  & span.mdi {
+  & span.mdi, &.mdi {
     width: 3rem;
   }
   

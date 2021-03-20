@@ -10,6 +10,7 @@
           />
       </div>
       <div class="map-area">
+        <button class="reset-button mdi mdi-undo-variant" @click="reset"/>
         <MapSlot :map="selectedMap" bar @click="unselectMap"/>
         <FirstPickDisplay :modelValue="firstPick" @click="unsetFirstPick" />
       </div>
@@ -82,15 +83,19 @@ export default defineComponent({
     FirstPickDisplay
   },
   setup() {
-    const data = reactive<Data>({
-      selectedMap: null,
-      firstPick: undefined,
-      allies: Array(Math.ceil(5)).fill(undefined),
-      ennemies: Array(Math.ceil(5)).fill(undefined),
-      allyBans: Array(Math.ceil(3)).fill(undefined),
-      ennemyBans: Array(Math.ceil(3)).fill(undefined),
-      selectedSlot: GenericSlotId.Map
-    })
+    function getResetData() {
+      return {
+        selectedMap: null,
+        firstPick: undefined,
+        allies: Array(Math.ceil(5)).fill(undefined),
+        ennemies: Array(Math.ceil(5)).fill(undefined),
+        allyBans: Array(Math.ceil(3)).fill(undefined),
+        ennemyBans: Array(Math.ceil(3)).fill(undefined),
+        selectedSlot: GenericSlotId.Map
+      }
+    }
+
+    const data = reactive<Data>(getResetData())
 
     function getSelectedHeroRow(slot: SlotId | null) {
       if (!slot || typeof slot === 'string')
@@ -175,7 +180,7 @@ export default defineComponent({
       onEnnemySlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ennemy', index },
       onAllyBanSlotClicked: ( index: number ) => data.selectedSlot = { kind: 'allyBan', index },
       onEnnemyBanSlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ennemyBan', index },
-
+      reset: () => Object.assign(data, getResetData()),
       selectNextSlot,
     }
   }
@@ -194,6 +199,10 @@ export default defineComponent({
 .header {
   display: flex;
   justify-content: space-around;
+}
+
+.reset-button {
+  margin: 0.2rem;
 }
 
 .map-area {
