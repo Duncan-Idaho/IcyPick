@@ -1,5 +1,6 @@
 <template>
   <div class="role-sections">
+    <button @click="onUnselect">Unselect</button>
     <div class="role-section" v-for="role in roles" :key="role.id">
       <img class="role" :src="require(`@/assets/${role.id}.png`)" draggable="false" />
       <div>
@@ -54,8 +55,10 @@ export default defineComponent({
   },
   methods: {
     onHeroClick(role: Role, index: number) {
-      console.log(role.heroes[index])
       this.$emit('update:modelValue', role.heroes[index])
+    },
+    onUnselect() {
+      this.$emit('update:modelValue', undefined)
     }
   }
 })
@@ -67,6 +70,10 @@ export default defineComponent({
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;
+}
+
+button {
+  width: 100%
 }
 
 .role-section {
