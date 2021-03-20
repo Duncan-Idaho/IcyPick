@@ -41,17 +41,9 @@ $hero-width: var(--hero-width, 5rem);
 .hero-border {
   --hexagon-border: 0.2rem;
   background-color: rgb(38, 38, 39);
-  &.ally {
-    --hexagon-border: 0.3rem;
-    background-color: rgb(99, 99, 209);
-  }
-  &.ennemy {
-    --hexagon-border: 0.3rem;
-    background-color: rgb(209, 99, 99);
-  }
   &.selected {
-    --hexagon-border: 0.3rem;
-    background-color: rgb(209, 99, 99);
+    --hexagon-border: 0.2rem;
+    background-color: rgba(138, 150, 255, 1);
   }
 
   display: inline-block;
