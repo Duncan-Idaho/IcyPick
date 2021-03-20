@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, watch, reactive, toRefs } from 'vue';
 import HeroSelector from '@/components/HeroSelector.vue'
 import MapSelector from '@/components/MapSelector.vue';
 import MapSlot from '@/components/MapSlot.vue';
@@ -94,132 +94,95 @@ export default defineComponent({
     MapSelector,
     HeroJaggedRows
   },
-  data(): Data {
-    return {
+  setup() {
+    const data = reactive<Data>({
       selectedMap: null,
       allies: Array(Math.ceil(5)).fill(undefined),
       ennemies: Array(Math.ceil(5)).fill(undefined),
       allyBans: Array(Math.ceil(3)).fill(undefined),
       ennemyBans: Array(Math.ceil(3)).fill(undefined),
       selectedSlot: GenericSlotId.Map
-    }
-  },
-  computed: {
-    selectedAllySlot(): number | undefined {
-      return getIndexFor(this.selectedSlot, 'ally')
-    },
-    selectedEnnemySlot(): number | undefined {
-      return getIndexFor(this.selectedSlot, 'ennemy')
-    },
-    selectedAllyBanSlot(): number | undefined {
-      return getIndexFor(this.selectedSlot, 'allyBan')
-    },
-    selectedEnnemyBanSlot(): number | undefined {
-      return getIndexFor(this.selectedSlot, 'ennemyBan')
-    },
-    selectedHeroRow(): (Hero | undefined)[] | undefined {
-      if (!this.selectedSlot || typeof this.selectedSlot === 'string')
+    })
+
+    const selectedHeroRow = computed(() => {
+      if (!data.selectedSlot || typeof data.selectedSlot === 'string')
         return undefined
 
-      switch (this.selectedSlot.kind)
+      switch (data.selectedSlot.kind)
       {
         case 'ally':
-          return this.allies
+          return data.allies
         case 'ennemy':
-          return this.ennemies
+          return data.ennemies
         case 'allyBan':
-          return this.allyBans
+          return data.allyBans
         case 'ennemyBan':
-          return this.ennemyBans
+          return data.ennemyBans
         default:
           return undefined
       }
-    },
-    selectedHero: {
+    })
+
+    const selectedHero = computed({
       get(): Hero | undefined {
-        if (!this.selectedHeroRow || !isHeroSlot(this.selectedSlot))
+        if (!selectedHeroRow.value || !isHeroSlot(data.selectedSlot))
           return undefined;
-        return this.selectedHeroRow[this.selectedSlot.index]
+        return selectedHeroRow.value[data.selectedSlot.index]
       },
       set(value: Hero |  undefined) {
-        if (!this.selectedHeroRow || !isHeroSlot(this.selectedSlot))
+        if (!selectedHeroRow.value || !isHeroSlot(data.selectedSlot))
           return;
 
-        this.selectedHeroRow[this.selectedSlot.index] = value
+        selectedHeroRow.value[data.selectedSlot.index] = value
       }
-    }
-  },
-  methods: {
-    unselectMap() {
-      this.selectedMap = null
-    },
-    selectSlot(slotId: SlotId) {
-      this.selectedSlot = slotId
-    },
-    onAllySlotClicked( index: number ) {
-      this.selectedSlot = { kind: 'ally', index }
-    },
-    onEnnemySlotClicked( index: number ) {
-      this.selectedSlot = { kind: 'ennemy', index }
-    },
-    onAllyBanSlotClicked( index: number ) {
-      this.selectedSlot = { kind: 'allyBan', index }
-    },
-    onEnnemyBanSlotClicked( index: number ) {
-      this.selectedSlot = { kind: 'ennemyBan', index }
-    },
-    selectNextSlot() {
-      if (!this.selectedMap) {
-        this.selectedSlot = GenericSlotId.Map
+    })
+
+    const selectNextSlot = () => {
+      if (!data.selectedMap) {
+        data.selectedSlot = GenericSlotId.Map
       } else {
-        let firstAllyNotSelected = this.allies.indexOf(undefined);
-        let firstEnnemyNotSelected = this.ennemies.indexOf(undefined);
+        let firstAllyNotSelected = data.allies.indexOf(undefined);
+        let firstEnnemyNotSelected = data.ennemies.indexOf(undefined);
 
         if (firstAllyNotSelected === -1)
           firstAllyNotSelected = 5;
         if (firstEnnemyNotSelected === -1)
           firstEnnemyNotSelected = 5;
 
-        this.selectedSlot = { 
+        data.selectedSlot = { 
           kind: firstAllyNotSelected <= firstEnnemyNotSelected ? 'ally' : 'ennemy',
           index: Math.min(firstAllyNotSelected, firstEnnemyNotSelected)
         };
 
-        if (this.selectedSlot.index ===5)
-          this.selectedSlot = null
+        if (data.selectedSlot.index ===5)
+          data.selectedSlot = null
       }
     }
-  },
-  watch: {
-    allies: {
-      deep: true,
-      handler () {
-        this.selectNextSlot()
-      }
-    },
-    ennemies: {
-      deep: true,
-      handler () {
-        this.selectNextSlot()
-      }
-    },
-    allyBans: {
-      deep: true,
-      handler () {
-        this.selectNextSlot()
-      }
-    },
-    ennemyBans: {
-      deep: true,
-      handler () {
-        this.selectNextSlot()
-      }
-    },
-    selectedMap: {
-      deep: true,
-      handler () {
-        this.selectNextSlot()
-      }
+
+    watch(() => data.allies, selectNextSlot, { deep: true});
+    watch(() => data.ennemies, selectNextSlot, { deep: true});
+    watch(() => data.allyBans, selectNextSlot, { deep: true});
+    watch(() => data.ennemyBans, selectNextSlot, { deep: true});
+    watch(() => data.selectedMap, selectNextSlot, { deep: true});
+
+    return {
+      ...toRefs(data),
+      selectedHeroRow,
+      selectedHero,
+
+      selectedAllySlot: computed(() => getIndexFor(data.selectedSlot, 'ally')),
+      selectedEnnemySlot: computed(() => getIndexFor(data.selectedSlot, 'ennemy')),
+      selectedAllyBanSlot: computed(() => getIndexFor(data.selectedSlot, 'allyBan')),
+      selectedEnnemyBanSlot: computed(() => getIndexFor(data.selectedSlot, 'ennemyBan')),      
+      
+      unselectMap: () => data.selectedMap = null,
+      selectSlot: (slotId: SlotId) => data.selectedSlot = slotId,
+      onAllySlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ally', index },
+      onEnnemySlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ennemy', index },
+      onAllyBanSlotClicked: ( index: number ) => data.selectedSlot = { kind: 'allyBan', index },
+      onEnnemyBanSlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ennemyBan', index },
+
+      selectNextSlot,
     }
   }
 });
