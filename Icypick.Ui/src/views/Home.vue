@@ -11,6 +11,7 @@
       </div>
       <div class="map-area">
         <MapSlot :map="selectedMap" bar @click="unselectMap"/>
+        <FirstPickDisplay :modelValue="firstPick" @click="unsetFirstPick" />
       </div>
       <div class="ennemy-bans-area">
         <HeroJaggedRows 
@@ -32,6 +33,7 @@
       </div>
       <div class="main-area">
         <MapSelector v-if="selectedSlot === 'map'" v-model="selectedMap"/>
+        <FirstPickSelector v-if="selectedSlot === 'pick'" v-model="firstPick"/>
         <HeroSelector v-if="!!selectedSlot && !!selectedSlot.kind" v-model="selectedHero"/>
       </div>
       <div class="ennemies-area">
@@ -48,16 +50,19 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, watch, reactive, toRefs } from 'vue';
+import { computed, defineComponent, watch, reactive, toRefs } from 'vue'
 import HeroSelector from '@/components/HeroSelector.vue'
-import MapSelector from '@/components/MapSelector.vue';
-import MapSlot from '@/components/MapSlot.vue';
-import HeroJaggedRows from '@/components/HeroJaggedRows.vue';
-import { Map, Hero } from '@/data';
-import { SlotId, GenericSlotId, getIndexFor, isHeroSlot } from '@/domain/order'
+import MapSelector from '@/components/MapSelector.vue'
+import MapSlot from '@/components/MapSlot.vue'
+import HeroJaggedRows from '@/components/HeroJaggedRows.vue'
+import FirstPickSelector from '@/components/FirstPickSelector.vue'
+import FirstPickDisplay from '@/components/FirstPickDisplay.vue'
+import { Map, Hero } from '@/data'
+import { SlotId, GenericSlotId, getIndexFor, isHeroSlot, FirstPick } from '@/domain/order'
 
 interface Data {
   selectedMap: Map | null;
+  firstPick: FirstPick;
   allies: (Hero | undefined)[];
   ennemies: (Hero | undefined)[];
   allyBans: (Hero | undefined)[];
@@ -71,11 +76,14 @@ export default defineComponent({
     HeroSelector,
     MapSlot,
     MapSelector,
-    HeroJaggedRows
+    HeroJaggedRows,
+    FirstPickSelector,
+    FirstPickDisplay
   },
   setup() {
     const data = reactive<Data>({
       selectedMap: null,
+      firstPick: undefined,
       allies: Array(Math.ceil(5)).fill(undefined),
       ennemies: Array(Math.ceil(5)).fill(undefined),
       allyBans: Array(Math.ceil(3)).fill(undefined),
@@ -105,12 +113,12 @@ export default defineComponent({
     const selectedHero = computed({
       get(): Hero | undefined {
         if (!selectedHeroRow.value || !isHeroSlot(data.selectedSlot))
-          return undefined;
+          return undefined
         return selectedHeroRow.value[data.selectedSlot.index]
       },
       set(value: Hero |  undefined) {
         if (!selectedHeroRow.value || !isHeroSlot(data.selectedSlot))
-          return;
+          return
 
         selectedHeroRow.value[data.selectedSlot.index] = value
       }
@@ -119,30 +127,33 @@ export default defineComponent({
     const selectNextSlot = () => {
       if (!data.selectedMap) {
         data.selectedSlot = GenericSlotId.Map
+      } else if (!data.firstPick) {
+        data.selectedSlot = GenericSlotId.Pick
       } else {
-        let firstAllyNotSelected = data.allies.indexOf(undefined);
-        let firstEnnemyNotSelected = data.ennemies.indexOf(undefined);
+        let firstAllyNotSelected = data.allies.indexOf(undefined)
+        let firstEnnemyNotSelected = data.ennemies.indexOf(undefined)
 
         if (firstAllyNotSelected === -1)
-          firstAllyNotSelected = 5;
+          firstAllyNotSelected = 5
         if (firstEnnemyNotSelected === -1)
-          firstEnnemyNotSelected = 5;
+          firstEnnemyNotSelected = 5
 
         data.selectedSlot = { 
           kind: firstAllyNotSelected <= firstEnnemyNotSelected ? 'ally' : 'ennemy',
           index: Math.min(firstAllyNotSelected, firstEnnemyNotSelected)
-        };
+        }
 
         if (data.selectedSlot.index ===5)
           data.selectedSlot = null
       }
     }
 
-    watch(() => data.allies, selectNextSlot, { deep: true});
-    watch(() => data.ennemies, selectNextSlot, { deep: true});
-    watch(() => data.allyBans, selectNextSlot, { deep: true});
-    watch(() => data.ennemyBans, selectNextSlot, { deep: true});
-    watch(() => data.selectedMap, selectNextSlot, { deep: true});
+    watch(() => data.selectedMap, selectNextSlot, { deep: true})
+    watch(() => data.firstPick, selectNextSlot, { deep: true})
+    watch(() => data.allies, selectNextSlot, { deep: true})
+    watch(() => data.ennemies, selectNextSlot, { deep: true})
+    watch(() => data.allyBans, selectNextSlot, { deep: true})
+    watch(() => data.ennemyBans, selectNextSlot, { deep: true})
 
     return {
       ...toRefs(data),
@@ -154,6 +165,7 @@ export default defineComponent({
       selectedAllyBanSlot: computed(() => getIndexFor(data.selectedSlot, 'allyBan')),
       selectedEnnemyBanSlot: computed(() => getIndexFor(data.selectedSlot, 'ennemyBan')),      
       
+      unsetFirstPick: () => data.firstPick = undefined,
       unselectMap: () => data.selectedMap = null,
       selectSlot: (slotId: SlotId) => data.selectedSlot = slotId,
       onAllySlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ally', index },
@@ -164,7 +176,7 @@ export default defineComponent({
       selectNextSlot,
     }
   }
-});
+})
 </script>
 
 <style lang="scss" scoped>*
@@ -179,6 +191,10 @@ export default defineComponent({
 .header {
   display: flex;
   justify-content: space-around;
+}
+
+.map-area {
+  display: flex;
 }
 
 .body {
