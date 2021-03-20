@@ -31,4 +31,30 @@ html, body, #app {
     }
   }
 }
+
+
+button {
+  font-size: 1.33rem;
+  color: white;
+  font-weight: bold;
+
+  margin: 0.2rem;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+
+  height: 3rem;
+  & span.mdi {
+    width: 3rem;
+  }
+  
+  // button reset
+  background-color: transparent;
+  box-sizing: content-box;
+  outline: none;
+  padding: 0;
+
+  &:focus {
+    border: 2px solid rgba(138, 150, 255, 1);
+  }
+}
+  
 </style>

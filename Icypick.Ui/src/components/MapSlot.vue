@@ -50,25 +50,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 button.map {
   margin: 0.2rem;
-  border: 2px solid rgba(255, 255, 255, 0.7);
   
   display: flex;
   justify-content:center; 
   align-items:center;
 
-  color: white;
-  font-weight: bold;
   font-size: 1.33rem;
-
-  // button reset
-  background-color: transparent;
-  box-sizing: content-box;
-  padding: 0px;
-  outline: none;
-
-  &:focus {
-    border: 2px solid rgba(138, 150, 255, 1);
-  }
 
   &.tile {
     width: 8rem;

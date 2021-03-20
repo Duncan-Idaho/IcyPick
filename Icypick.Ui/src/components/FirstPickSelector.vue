@@ -45,21 +45,8 @@ export default defineComponent({
   button {
     font-size: 3rem;
 
-    color: white;
-    font-weight: bold;
-
-    border: 2px solid rgba(255, 255, 255, 0.7);
     margin: 4rem;
     padding: 2rem 3rem;
-    
-    // button reset
-    background-color: transparent;
-    box-sizing: content-box;
-    outline: none;
-
-    &:focus {
-      border: 2px solid rgba(138, 150, 255, 1);
-    }
   }
 }
 
