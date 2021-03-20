@@ -58,7 +58,7 @@ import HeroJaggedRows from '@/components/HeroJaggedRows.vue'
 import FirstPickSelector from '@/components/FirstPickSelector.vue'
 import FirstPickDisplay from '@/components/FirstPickDisplay.vue'
 import { Map, Hero } from '@/data'
-import { SlotId, GenericSlotId, getIndexFor, isHeroSlot, FirstPick } from '@/domain/order'
+import { SlotId, GenericSlotId, getIndexFor, createSlots, isHeroSlot, FirstPick } from '@/domain/order'
 
 interface Data {
   selectedMap: Map | null;
@@ -91,11 +91,11 @@ export default defineComponent({
       selectedSlot: GenericSlotId.Map
     })
 
-    const selectedHeroRow = computed(() => {
-      if (!data.selectedSlot || typeof data.selectedSlot === 'string')
+    function getSelectedHeroRow(slot: SlotId | null) {
+      if (!slot || typeof slot === 'string')
         return undefined
 
-      switch (data.selectedSlot.kind)
+      switch (slot.kind)
       {
         case 'ally':
           return data.allies
@@ -108,7 +108,9 @@ export default defineComponent({
         default:
           return undefined
       }
-    })
+    }
+
+    const selectedHeroRow = computed(() => getSelectedHeroRow(data.selectedSlot))
 
     const selectedHero = computed({
       get(): Hero | undefined {
@@ -124,28 +126,20 @@ export default defineComponent({
       }
     })
 
+    const order = computed(() => createSlots(data.firstPick))
+
+    const nextSlot = computed(() => order.value.find(slot => {
+      if (slot === 'map')
+        return !data.selectedMap
+      if (slot === 'pick')
+        return !data.firstPick
+
+      const row = getSelectedHeroRow(slot) || []
+      return !row[slot.index]
+    }) || null);
+
     const selectNextSlot = () => {
-      if (!data.selectedMap) {
-        data.selectedSlot = GenericSlotId.Map
-      } else if (!data.firstPick) {
-        data.selectedSlot = GenericSlotId.Pick
-      } else {
-        let firstAllyNotSelected = data.allies.indexOf(undefined)
-        let firstEnnemyNotSelected = data.ennemies.indexOf(undefined)
-
-        if (firstAllyNotSelected === -1)
-          firstAllyNotSelected = 5
-        if (firstEnnemyNotSelected === -1)
-          firstEnnemyNotSelected = 5
-
-        data.selectedSlot = { 
-          kind: firstAllyNotSelected <= firstEnnemyNotSelected ? 'ally' : 'ennemy',
-          index: Math.min(firstAllyNotSelected, firstEnnemyNotSelected)
-        }
-
-        if (data.selectedSlot.index ===5)
-          data.selectedSlot = null
-      }
+      data.selectedSlot = nextSlot.value
     }
 
     watch(() => data.selectedMap, selectNextSlot, { deep: true})
@@ -159,6 +153,8 @@ export default defineComponent({
       ...toRefs(data),
       selectedHeroRow,
       selectedHero,
+      order,
+      nextSlot,
 
       selectedAllySlot: computed(() => getIndexFor(data.selectedSlot, 'ally')),
       selectedEnnemySlot: computed(() => getIndexFor(data.selectedSlot, 'ennemy')),
