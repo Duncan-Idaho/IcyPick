@@ -34,7 +34,7 @@
       <div class="main-area">
         <MapSelector v-if="selectedSlot === 'map'" v-model="selectedMap"/>
         <FirstPickSelector v-if="selectedSlot === 'pick'" v-model="firstPick"/>
-        <HeroSelector v-if="!!selectedSlot && !!selectedSlot.kind" v-model="selectedHero"/>
+        <HeroSelector v-if="!!selectedSlot && !!selectedSlot.kind" v-model="selectedHero" :heroes="availableHeroes"/>
       </div>
       <div class="ennemies-area">
         <HeroJaggedRows 
@@ -57,6 +57,7 @@ import MapSlot from '@/components/MapSlot.vue'
 import HeroJaggedRows from '@/components/HeroJaggedRows.vue'
 import FirstPickSelector from '@/components/FirstPickSelector.vue'
 import FirstPickDisplay from '@/components/FirstPickDisplay.vue'
+import { heroes } from '@/data.json'
 import { Map, Hero } from '@/data'
 import { SlotId, GenericSlotId, getIndexFor, createSlots, isHeroSlot, FirstPick } from '@/domain/order'
 
@@ -128,6 +129,10 @@ export default defineComponent({
 
     const order = computed(() => createSlots(data.firstPick))
 
+    const unavailableHeroes = computed(() => data.allies.concat(data.ennemies, data.allyBans, data.ennemyBans))
+    const availableHeroes = computed(() => heroes.filter(
+      hero => !unavailableHeroes.value.find(availableHero => availableHero && availableHero.id === hero.id)))
+
     const nextSlot = computed(() => order.value.find(slot => {
       if (slot === 'map')
         return !data.selectedMap
@@ -153,6 +158,8 @@ export default defineComponent({
       ...toRefs(data),
       selectedHeroRow,
       selectedHero,
+      unavailableHeroes,
+      availableHeroes,
       order,
       nextSlot,
 

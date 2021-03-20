@@ -30,6 +30,9 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Object as PropType<Hero | undefined>
+    },
+    heroes: {
+      type: Array as PropType<Hero[] | undefined>
     }
   },
   emits: ['update:modelValue'],
@@ -38,10 +41,12 @@ export default defineComponent({
   },
   computed: {
     roles(): Role[] {
-      const modelValue = this.modelValue;
-      const roles = [...new Set(heroes.map(hero => hero.role))]
+      const availableHeroes = this.heroes || heroes
+      const modelValue = this.modelValue
+
+      const roles = [...new Set(availableHeroes.map(hero => hero.role))]
       return roles.map(role => {
-        const heroesInRole: Hero[] = heroes.filter(hero => hero.role === role)
+        const heroesInRole: Hero[] = availableHeroes.filter(hero => hero.role === role)
         const selectedIndex = modelValue
           ? heroesInRole.findIndex(hero => hero.id === modelValue.id)
           : -1
