@@ -54,16 +54,7 @@ import MapSelector from '@/components/MapSelector.vue';
 import MapSlot from '@/components/MapSlot.vue';
 import HeroJaggedRows from '@/components/HeroJaggedRows.vue';
 import { Map, Hero } from '@/data';
-
-enum GenericSlotId {
-  Map = 'map', 
-  Pick = 'pick'
-}
-
-type SlotKind = 'ally' | 'ennemy' | 'allyBan' | 'ennemyBan'
-interface HeroSlotId { kind: SlotKind; index: number }
-
-type SlotId = GenericSlotId | HeroSlotId
+import { SlotId, GenericSlotId, getIndexFor, isHeroSlot } from '@/domain/order'
 
 interface Data {
   selectedMap: Map | null;
@@ -72,18 +63,6 @@ interface Data {
   allyBans: (Hero | undefined)[];
   ennemyBans: (Hero | undefined)[];
   selectedSlot: SlotId | null;
-}
-
-function getIndexFor(slotId: SlotId | null, kind: SlotKind) {
-  if (!slotId)
-    return undefined;
-  if (typeof slotId === 'string' || slotId.kind !== kind)
-    return undefined;
-  return slotId.index;
-}
-
-function isHeroSlot(slotId: SlotId | null): slotId is HeroSlotId {
-  return !!slotId && typeof slotId !== 'string';
 }
 
 export default defineComponent({
