@@ -1,7 +1,24 @@
 <template>
   <div class="layout">
     <div class="header">
-      <MapSlot :map="selectedMap" bar @click="unselectMap"/>
+      <div class="ally-bans-area">
+        <HeroJaggedRows 
+          :heroes="allyBans" 
+          :row-size="3"
+          :modelValue="selectedAllyBanSlot"
+          @update:modelValue="onAllyBanSlotClicked"
+          />
+      </div>
+      <div class="map-area">
+        <MapSlot :map="selectedMap" bar @click="unselectMap"/>
+      </div>
+      <div class="ennemy-bans-area">
+        <HeroJaggedRows 
+          :heroes="ennemyBans" 
+          :row-size="3"
+          :modelValue="selectedEnnemyBanSlot"
+          @update:modelValue="onEnnemyBanSlotClicked"
+          /></div>
     </div>
     <div class="body">
       <div class="allies-area">
@@ -15,7 +32,7 @@
       </div>
       <div class="main-area">
         <MapSelector v-if="selectedSlot === 'map'" v-model="selectedMap"/>
-        <HeroSelector v-else v-model="selectedHero"/>
+        <HeroSelector v-if="!!selectedSlot && !!selectedSlot.kind" v-model="selectedHero"/>
       </div>
       <div class="ennemies-area">
         <HeroJaggedRows 
@@ -42,7 +59,9 @@ enum GenericSlotId {
   Map = 'map', 
   Pick = 'pick'
 }
-interface HeroSlotId { kind: 'ally' | 'ennemy'; index: number }
+
+type SlotKind = 'ally' | 'ennemy' | 'allyBan' | 'ennemyBan'
+interface HeroSlotId { kind: SlotKind; index: number }
 
 type SlotId = GenericSlotId | HeroSlotId
 
@@ -50,13 +69,21 @@ interface Data {
   selectedMap: Map | null;
   allies: (Hero | undefined)[];
   ennemies: (Hero | undefined)[];
-  selectedSlot: SlotId;
+  allyBans: (Hero | undefined)[];
+  ennemyBans: (Hero | undefined)[];
+  selectedSlot: SlotId | null;
 }
 
-function getIndexFor(slotId: SlotId, kind: 'ally' | 'ennemy') {
+function getIndexFor(slotId: SlotId | null, kind: SlotKind) {
+  if (!slotId)
+    return undefined;
   if (typeof slotId === 'string' || slotId.kind !== kind)
     return undefined;
   return slotId.index;
+}
+
+function isHeroSlot(slotId: SlotId | null): slotId is HeroSlotId {
+  return !!slotId && typeof slotId !== 'string';
 }
 
 export default defineComponent({
@@ -72,6 +99,8 @@ export default defineComponent({
       selectedMap: null,
       allies: Array(Math.ceil(5)).fill(undefined),
       ennemies: Array(Math.ceil(5)).fill(undefined),
+      allyBans: Array(Math.ceil(3)).fill(undefined),
+      ennemyBans: Array(Math.ceil(3)).fill(undefined),
       selectedSlot: GenericSlotId.Map
     }
   },
@@ -82,26 +111,41 @@ export default defineComponent({
     selectedEnnemySlot(): number | undefined {
       return getIndexFor(this.selectedSlot, 'ennemy')
     },
+    selectedAllyBanSlot(): number | undefined {
+      return getIndexFor(this.selectedSlot, 'allyBan')
+    },
+    selectedEnnemyBanSlot(): number | undefined {
+      return getIndexFor(this.selectedSlot, 'ennemyBan')
+    },
+    selectedHeroRow(): (Hero | undefined)[] | undefined {
+      if (!this.selectedSlot || typeof this.selectedSlot === 'string')
+        return undefined
+
+      switch (this.selectedSlot.kind)
+      {
+        case 'ally':
+          return this.allies
+        case 'ennemy':
+          return this.ennemies
+        case 'allyBan':
+          return this.allyBans
+        case 'ennemyBan':
+          return this.ennemyBans
+        default:
+          return undefined
+      }
+    },
     selectedHero: {
       get(): Hero | undefined {
-        if (typeof this.selectedSlot === 'string')
-          return undefined
-
-        const slots: (Hero | undefined)[] = this.selectedSlot.kind === 'ally'
-          ? this.allies
-          : this.ennemies
-          
-        return slots[this.selectedSlot.index]
+        if (!this.selectedHeroRow || !isHeroSlot(this.selectedSlot))
+          return undefined;
+        return this.selectedHeroRow[this.selectedSlot.index]
       },
       set(value: Hero |  undefined) {
-        if (typeof this.selectedSlot === 'string')
-          return
+        if (!this.selectedHeroRow || !isHeroSlot(this.selectedSlot))
+          return;
 
-        const slots: (Hero | undefined)[] = this.selectedSlot.kind === 'ally'
-          ? this.allies
-          : this.ennemies
-          
-        slots[this.selectedSlot.index] = value
+        this.selectedHeroRow[this.selectedSlot.index] = value
       }
     }
   },
@@ -117,6 +161,12 @@ export default defineComponent({
     },
     onEnnemySlotClicked( index: number ) {
       this.selectedSlot = { kind: 'ennemy', index }
+    },
+    onAllyBanSlotClicked( index: number ) {
+      this.selectedSlot = { kind: 'allyBan', index }
+    },
+    onEnnemyBanSlotClicked( index: number ) {
+      this.selectedSlot = { kind: 'ennemyBan', index }
     },
     selectNextSlot() {
       if (!this.selectedMap) {
@@ -134,6 +184,9 @@ export default defineComponent({
           kind: firstAllyNotSelected <= firstEnnemyNotSelected ? 'ally' : 'ennemy',
           index: Math.min(firstAllyNotSelected, firstEnnemyNotSelected)
         };
+
+        if (this.selectedSlot.index ===5)
+          this.selectedSlot = null
       }
     }
   },
@@ -145,6 +198,18 @@ export default defineComponent({
       }
     },
     ennemies: {
+      deep: true,
+      handler () {
+        this.selectNextSlot()
+      }
+    },
+    allyBans: {
+      deep: true,
+      handler () {
+        this.selectNextSlot()
+      }
+    },
+    ennemyBans: {
       deep: true,
       handler () {
         this.selectNextSlot()
@@ -171,7 +236,7 @@ export default defineComponent({
 
 .header {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .body {
