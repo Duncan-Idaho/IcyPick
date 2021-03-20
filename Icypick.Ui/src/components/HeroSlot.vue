@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <img v-if="hero" class="hero-icon"
+    <img v-if="hero" class="hero-icon" draggable="false"
       :src="require(`@/assets/images/heroes/${hero.id}.jpg`)" 
       :alt="hero.name" :title="hero.name"/>
     <span v-else class="hero-icon mdi mdi-help" />
@@ -59,6 +59,7 @@ $hero-width: var(--hero-width, 5rem);
   --hexagon-width: #{$hero-width};
 
   .hero-icon {
+    user-select: none;
     object-fit: cover;
     background-color: #1a0a38;
     color: white;

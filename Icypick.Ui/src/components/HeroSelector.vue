@@ -1,7 +1,7 @@
 <template>
   <div class="role-sections">
     <div class="role-section" v-for="role in roles" :key="role.id">
-      <img class="role" :src="require(`@/assets/${role.id}.png`)" />
+      <img class="role" :src="require(`@/assets/${role.id}.png`)" draggable="false" />
       <div>
         <HeroJaggedRows 
           :heroes="role.heroes" 
@@ -63,6 +63,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .role-sections {
+  user-select: none;
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;

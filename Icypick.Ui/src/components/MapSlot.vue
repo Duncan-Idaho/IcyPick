@@ -1,6 +1,6 @@
 <template>
   <button v-if="bar" @click="click" class="map bar">
-    <img v-if="map" :src="backgroundImage"/>
+    <img v-if="map" :src="backgroundImage" draggable="false"/>
     <span v-else class="mdi mdi-help" />
     <span class="name">
       {{ map ? map.name : '' }}
@@ -87,6 +87,7 @@ button.map {
 
     & img {
       height: 100%;
+      user-select: none;
     }
     & span.mdi {
       width: 3rem;
