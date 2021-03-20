@@ -1,6 +1,6 @@
 <template>
   <template v-for="(group, groupIndex) in groups" :key="groupIndex">
-    <div class="long-line">
+    <div :class="[ 'long-line', alignment ]">
       <HeroSlot v-for="{ hero, index } in group.longLine" 
         :key="index" 
         :hero="hero" 
@@ -9,7 +9,7 @@
 
       <div class="gap" v-if="rowSize != 1 && group.longLine.length % 2 !== 1"/>
     </div>
-    <div class="short-line" v-if="group.shortLine.length">
+    <div :class="[ 'short-line', alignment ]" v-if="group.shortLine.length">
       <HeroSlot v-for="{ hero, index } in group.shortLine" 
         :key="index" 
         :hero="hero" 
@@ -36,12 +36,18 @@ interface Group {
   shortLine: HeroSlot[];
 }
 
+type Alignment = 'left' | 'right' | 'center' | 'inherit';
+
 export default defineComponent({
   name: 'HeroJaggedRows',
   props: {
     heroes: {
       type: Array as PropType<Hero[]>,
       required: true
+    },
+    alignment: {
+      type: String as PropType<Alignment>,
+      default: 'inherit'
     },
     rowSize: {
       type: Number,
@@ -113,8 +119,19 @@ $shift: calc(#{$hero-width} / 2);
 .long-line + .short-line, .short-line + .long-line {
   margin-top: calc(-1 * #{$interlocking-height});
 }
-.short-line {
+.center {
+  text-align: center;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.short-line.inherit, .short-line.center, .short-line.left {
   margin-left: $shift;
+}
+.short-line.inherit, .short-line.center, .short-line.right {
   margin-right: $shift;
 }
 .gap {

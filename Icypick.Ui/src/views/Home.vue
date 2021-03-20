@@ -8,6 +8,7 @@
         <HeroJaggedRows 
           :heroes="allies" 
           :row-size="1"
+          alignment="left"
           :modelValue="selectedAllySlot"
           @update:modelValue="onAllySlotClicked"
           />
@@ -20,6 +21,7 @@
         <HeroJaggedRows 
           :heroes="ennemies" 
           :row-size="1"
+          alignment="right"
           :modelValue="selectedEnnemySlot"
           @update:modelValue="onEnnemySlotClicked"
           />
@@ -181,16 +183,15 @@ export default defineComponent({
 }
 
 .allies-area, .ennemies-area {
-  flex: 0 0 15rem;
   --hero-width: 10rem;
 }
 
 .allies-area {
-  text-align: left;
+  margin-right: 0.5em;
 }
 
 .ennemies-area {
-  text-align: right;
+  margin-left: 0.5em;
 }
 
 .main-area {

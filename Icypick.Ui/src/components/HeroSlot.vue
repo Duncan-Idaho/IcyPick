@@ -71,6 +71,7 @@ $hero-width: var(--hero-width, 5rem);
     // for mdi icon
     text-align: center;
     font-size: calc(#{$hero-width} * 0.5);
+    text-indent: 0;
   }
 
   // Hexagon shape
