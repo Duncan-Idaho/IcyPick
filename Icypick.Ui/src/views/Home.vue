@@ -96,7 +96,57 @@ export default defineComponent({
     }
 
     const data = reactive<Data>(getResetData())
-    const allHeroes = reactive(heroes)
+
+    watch(() => data.selectedMap, selectNextSlot, { deep: true})
+    watch(() => data.firstPick, selectNextSlot, { deep: true})
+    watch(() => data.allies, selectNextSlot, { deep: true})
+    watch(() => data.ennemies, selectNextSlot, { deep: true})
+    watch(() => data.allyBans, selectNextSlot, { deep: true})
+    watch(() => data.ennemyBans, selectNextSlot, { deep: true})
+
+    return {
+      ...toRefs(data),
+      availableHeroes: createAvailableHeroes(),
+      selectedHero: createSelectedHero(),
+
+      selectedAllySlot: computed(() => getIndexFor(data.selectedSlot, 'ally')),
+      selectedEnnemySlot: computed(() => getIndexFor(data.selectedSlot, 'ennemy')),
+      selectedAllyBanSlot: computed(() => getIndexFor(data.selectedSlot, 'allyBan')),
+      selectedEnnemyBanSlot: computed(() => getIndexFor(data.selectedSlot, 'ennemyBan')),      
+      
+      unsetFirstPick: () => data.firstPick = undefined,
+      unselectMap: () => data.selectedMap = null,
+      selectSlot: (slotId: SlotId) => data.selectedSlot = slotId,
+      onAllySlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ally', index },
+      onEnnemySlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ennemy', index },
+      onAllyBanSlotClicked: ( index: number ) => data.selectedSlot = { kind: 'allyBan', index },
+      onEnnemyBanSlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ennemyBan', index },
+      reset: () => Object.assign(data, getResetData())
+    }
+
+    function createAvailableHeroes() {
+      const allHeroes = reactive(heroes)
+      const unavailableHeroes = computed(() => data.allies.concat(data.ennemies, data.allyBans, data.ennemyBans))
+      return computed(() => allHeroes.filter(hero => !unavailableHeroes.value.includes(hero)))
+    }
+
+    function createSelectedHero() {
+      const selectedHeroRow = computed(() => getSelectedHeroRow(data.selectedSlot))
+
+      return computed({
+        get(): Hero | undefined {
+          if (!selectedHeroRow.value || !isHeroSlot(data.selectedSlot))
+            return undefined
+          return selectedHeroRow.value[data.selectedSlot.index]
+        },
+        set(value: Hero |  undefined) {
+          if (!selectedHeroRow.value || !isHeroSlot(data.selectedSlot))
+            return
+
+          selectedHeroRow.value[data.selectedSlot.index] = value
+        }
+      })
+    }
 
     function getSelectedHeroRow(slot: SlotId | null) {
       if (!slot || typeof slot === 'string')
@@ -117,67 +167,19 @@ export default defineComponent({
       }
     }
 
-    const selectedHeroRow = computed(() => getSelectedHeroRow(data.selectedSlot))
+    function selectNextSlot() {
+      const order = computed(() => createSlots(data.firstPick))
+      const nextSlot = computed(() => order.value.find(slot => {
+        if (slot === 'map')
+          return !data.selectedMap
+        if (slot === 'pick')
+          return !data.firstPick
 
-    const selectedHero = computed({
-      get(): Hero | undefined {
-        if (!selectedHeroRow.value || !isHeroSlot(data.selectedSlot))
-          return undefined
-        return selectedHeroRow.value[data.selectedSlot.index]
-      },
-      set(value: Hero |  undefined) {
-        if (!selectedHeroRow.value || !isHeroSlot(data.selectedSlot))
-          return
-
-        selectedHeroRow.value[data.selectedSlot.index] = value
-      }
-    })
-
-    const order = computed(() => createSlots(data.firstPick))
-
-    const unavailableHeroes = computed(() => data.allies.concat(data.ennemies, data.allyBans, data.ennemyBans))
-    const availableHeroes = computed(() => allHeroes.filter(hero => !unavailableHeroes.value.includes(hero)))
-
-    const nextSlot = computed(() => order.value.find(slot => {
-      if (slot === 'map')
-        return !data.selectedMap
-      if (slot === 'pick')
-        return !data.firstPick
-
-      const row = getSelectedHeroRow(slot) || []
-      return !row[slot.index]
-    }) || null);
-
-    const selectNextSlot = () => {
-      data.selectedSlot = nextSlot.value
-    }
-
-    watch(() => data.selectedMap, selectNextSlot, { deep: true})
-    watch(() => data.firstPick, selectNextSlot, { deep: true})
-    watch(() => data.allies, selectNextSlot, { deep: true})
-    watch(() => data.ennemies, selectNextSlot, { deep: true})
-    watch(() => data.allyBans, selectNextSlot, { deep: true})
-    watch(() => data.ennemyBans, selectNextSlot, { deep: true})
-
-    return {
-      ...toRefs(data),
-      selectedHero,
-      availableHeroes,
-
-      selectedAllySlot: computed(() => getIndexFor(data.selectedSlot, 'ally')),
-      selectedEnnemySlot: computed(() => getIndexFor(data.selectedSlot, 'ennemy')),
-      selectedAllyBanSlot: computed(() => getIndexFor(data.selectedSlot, 'allyBan')),
-      selectedEnnemyBanSlot: computed(() => getIndexFor(data.selectedSlot, 'ennemyBan')),      
+        const row = getSelectedHeroRow(slot) || []
+        return !row[slot.index]
+      }) || null);
       
-      unsetFirstPick: () => data.firstPick = undefined,
-      unselectMap: () => data.selectedMap = null,
-      selectSlot: (slotId: SlotId) => data.selectedSlot = slotId,
-      onAllySlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ally', index },
-      onEnnemySlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ennemy', index },
-      onAllyBanSlotClicked: ( index: number ) => data.selectedSlot = { kind: 'allyBan', index },
-      onEnnemyBanSlotClicked: ( index: number ) => data.selectedSlot = { kind: 'ennemyBan', index },
-      reset: () => Object.assign(data, getResetData()),
-      selectNextSlot,
+      data.selectedSlot = nextSlot.value
     }
   }
 })
