@@ -96,6 +96,7 @@ export default defineComponent({
     }
 
     const data = reactive<Data>(getResetData())
+    const allHeroes = reactive(heroes)
 
     function getSelectedHeroRow(slot: SlotId | null) {
       if (!slot || typeof slot === 'string')
@@ -135,8 +136,7 @@ export default defineComponent({
     const order = computed(() => createSlots(data.firstPick))
 
     const unavailableHeroes = computed(() => data.allies.concat(data.ennemies, data.allyBans, data.ennemyBans))
-    const availableHeroes = computed(() => heroes.filter(
-      hero => !unavailableHeroes.value.find(availableHero => availableHero && availableHero.id === hero.id)))
+    const availableHeroes = computed(() => allHeroes.filter(hero => !unavailableHeroes.value.includes(hero)))
 
     const nextSlot = computed(() => order.value.find(slot => {
       if (slot === 'map')
@@ -161,12 +161,8 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      selectedHeroRow,
       selectedHero,
-      unavailableHeroes,
       availableHeroes,
-      order,
-      nextSlot,
 
       selectedAllySlot: computed(() => getIndexFor(data.selectedSlot, 'ally')),
       selectedEnnemySlot: computed(() => getIndexFor(data.selectedSlot, 'ennemy')),

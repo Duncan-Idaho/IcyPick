@@ -18,7 +18,6 @@
 import { defineComponent, PropType } from 'vue';
 import HeroJaggedRows from '@/components/HeroJaggedRows.vue'
 import { Hero } from '@/data'
-import { heroes } from '@/data.json'
 
 interface Role {
   id: string;
@@ -32,7 +31,8 @@ export default defineComponent({
       type: Object as PropType<Hero | undefined>
     },
     heroes: {
-      type: Array as PropType<Hero[] | undefined>
+      type: Array as PropType<Hero[]>,
+      required: true
     }
   },
   emits: ['update:modelValue'],
@@ -41,12 +41,11 @@ export default defineComponent({
   },
   computed: {
     roles(): Role[] {
-      const availableHeroes = this.heroes || heroes
       const modelValue = this.modelValue
 
-      const roles = [...new Set(availableHeroes.map(hero => hero.role))]
+      const roles = [...new Set(this.heroes.map(hero => hero.role))]
       return roles.map(role => {
-        const heroesInRole: Hero[] = availableHeroes.filter(hero => hero.role === role)
+        const heroesInRole: Hero[] = this.heroes.filter(hero => hero.role === role)
         const selectedIndex = modelValue
           ? heroesInRole.findIndex(hero => hero.id === modelValue.id)
           : -1
