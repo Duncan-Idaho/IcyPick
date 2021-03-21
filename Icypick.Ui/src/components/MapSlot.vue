@@ -66,6 +66,7 @@ button.map {
 
   &.tile .mdi {
     font-size: 5rem;
+    width: 5rem
   }
 
   &.bar {
@@ -75,9 +76,6 @@ button.map {
     & img {
       height: 100%;
       user-select: none;
-    }
-    & span.mdi {
-      width: 3rem;
     }
     & span.name {
       flex-grow: 1;
