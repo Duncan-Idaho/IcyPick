@@ -34,11 +34,21 @@ export interface SynergiesAndCounter {
   counterSource: string;
 };
 
-export interface TierRecommendations {
-  [condition: "default" | "taunt" | "colossus" | "fury"]: TierRecommendation;
+export type TierCondition = "default" | "taunt" | "colossus" | "fury"
+
+export type TierRecommendations = {
+  [condition in TierCondition]?: TierRecommendation;
 }
 
+export type Tier = "strong-tiers"
+  | "good-tier-1" 
+  | "decent-tier-2" 
+  | "mediocre-tier-3"
+  | "unavailable-tier-4"
+
+export type TierList = 'general' | 'master' | 'aram'
+
 export interface TierRecommendation {
-  tier: string;
+  tier: Tier;
   banRecommended: boolean;
 }

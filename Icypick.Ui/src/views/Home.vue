@@ -61,6 +61,7 @@ import FirstPickDisplay from '@/components/FirstPickDisplay.vue'
 import { heroes } from '@/data.json'
 import { Map, Hero } from '@/data'
 import { SlotId, GenericSlotId, getIndexFor, createSlots, isHeroSlot, FirstPick } from '@/domain/order'
+import { scoreHero, toScoredHero } from '@/domain/scoring'
 
 interface Data {
   selectedMap: Map | null;
@@ -125,9 +126,11 @@ export default defineComponent({
     }
 
     function createAvailableHeroes() {
-      const allHeroes = reactive(heroes)
+      const allHeroes = reactive((heroes as Hero[]).map(toScoredHero))
       const unavailableHeroes = computed(() => data.allies.concat(data.ennemies, data.allyBans, data.ennemyBans))
-      return computed(() => allHeroes.filter(hero => !unavailableHeroes.value.includes(hero)))
+      return computed(() => allHeroes
+        .filter(hero => !unavailableHeroes.value.includes(hero))
+        .map(hero => scoreHero(hero, data)))
     }
 
     function createSelectedHero() {
