@@ -3,7 +3,7 @@ import { Map, Hero, TierList, TierRecommendations, TierCondition } from '@/data'
 
 const mapWeight = 3
 const synergyWeight = 1
-const counterWeight = 2
+const counterWeight = -2
 const tierScores = {
   "strong-tiers": { score: 5, reason: 'Strong tier' },
   "good-tier-1": { score: 3, reason: 'Good tier' },
@@ -62,7 +62,7 @@ function scoreMap(hero: ScoredHero, context: ScoringContext) {
     return [{ score: mapWeight, reason: 'Strong on map ' + context.selectedMap.name }]
 
   if (hero.mapPreference.weakerMaps.includes(context.selectedMap.id))
-    return [{ score: mapWeight, reason: 'Weak on map ' + context.selectedMap.name }]
+    return [{ score: -mapWeight, reason: 'Weak on map ' + context.selectedMap.name }]
 
   return []
 }
@@ -98,7 +98,7 @@ function scoreTiers(hero: ScoredHero, context: ScoringContext) {
     getScoreForTier(tierRecommendations, 'colossus'),
     getScoreForTier(tierRecommendations, 'fury'),
     getScoreForTier(tierRecommendations, 'taunt'),
-  ].filter(defined).filter(score => score.score > 0)
+  ].filter(defined)
 
   if (scores.length === 0)
     return scores

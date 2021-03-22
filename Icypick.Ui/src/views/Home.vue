@@ -130,7 +130,8 @@ export default defineComponent({
       const unavailableHeroes = computed(() => data.allies.concat(data.ennemies, data.allyBans, data.ennemyBans))
       return computed(() => allHeroes
         .filter(hero => !unavailableHeroes.value.includes(hero))
-        .map(hero => scoreHero(hero, data)))
+        .map(hero => scoreHero(hero, data))
+        .sort((left, right) => right.score - left.score))
     }
 
     function createSelectedHero() {
