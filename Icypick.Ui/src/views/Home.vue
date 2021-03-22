@@ -62,6 +62,7 @@ import { heroes } from '@/data.json'
 import { Map, Hero } from '@/data'
 import { SlotId, GenericSlotId, getIndexFor, createSlots, isHeroSlot, FirstPick } from '@/domain/order'
 import { scoreHero, toScoredHero } from '@/domain/scoring'
+import { toEnrichedHero } from '@/domain/enriching'
 
 interface Data {
   selectedMap: Map | null;
@@ -126,7 +127,10 @@ export default defineComponent({
     }
 
     function createAvailableHeroes() {
-      const allHeroes = reactive((heroes as Hero[]).map(toScoredHero))
+      const baseHeroes = heroes as Hero[]
+      const allHeroes = reactive(baseHeroes
+        .map(hero => toEnrichedHero(hero, baseHeroes))
+        .map(toScoredHero))
       const unavailableHeroes = computed(() => data.allies.concat(data.ennemies, data.allyBans, data.ennemyBans))
       return computed(() => allHeroes
         .filter(hero => !unavailableHeroes.value.includes(hero))

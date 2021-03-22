@@ -1,9 +1,11 @@
 
 import { Map, Hero, TierList, TierRecommendations, TierCondition } from '@/data'
+import { EnrichedHero } from './enriching'
 
 const mapWeight = 3
 const synergyWeight = 1
-const counterWeight = -2
+const counteredWeight = -2
+const counteringWeight = 2
 const tierScores = {
   "strong-tiers": { score: 5, reason: 'Strong tier' },
   "good-tier-1": { score: 3, reason: 'Good tier' },
@@ -20,7 +22,7 @@ export interface ScoringContext {
   ennemyBans: (Hero | undefined)[];
 }
 
-export interface ScoredHero extends Hero {
+export interface ScoredHero extends EnrichedHero {
   score: number;
   scoreReasons: ScoreReason[];
 }
@@ -31,7 +33,7 @@ export interface ScoreReason {
   inactive?: boolean;
 }
 
-export function toScoredHero(hero: Hero): ScoredHero {
+export function toScoredHero(hero: EnrichedHero): ScoredHero {
   return {
       ...hero,
     score: 0,
@@ -43,7 +45,8 @@ export function scoreHero(hero: ScoredHero, context: ScoringContext) {
   hero.scoreReasons = [
     ...scoreMap(hero, context),
     ...scoreSynergies(hero, context),
-    ...scoreCounters(hero, context),
+    ...scoreCountered(hero, context),
+    ...scoreCountering(hero, context),
     ...scoreTiers(hero, context)
   ].filter(defined);
 
@@ -70,17 +73,25 @@ function scoreMap(hero: ScoredHero, context: ScoringContext) {
 function scoreSynergies(hero: ScoredHero, context: ScoringContext) {
   return scoreBasedOnOtherHeroes(
     context.allies, 
-    hero.synergiesAndCounter.synergicHeroes, 
+    hero.synergiesAndCounter.synergicHeroes.concat(hero.extra.synergizeWithHeroes), 
     synergyWeight, 
     'Synergize with ')
 }
 
-function scoreCounters(hero: ScoredHero, context: ScoringContext) {
+function scoreCountered(hero: ScoredHero, context: ScoringContext) {
   return scoreBasedOnOtherHeroes(
     context.ennemies, 
     hero.synergiesAndCounter.counteringHeroes, 
-    counterWeight, 
+    counteredWeight, 
     'Countered by ')
+}
+
+function scoreCountering(hero: ScoredHero, context: ScoringContext) {
+  return scoreBasedOnOtherHeroes(
+    context.ennemies, 
+    hero.extra.countersHeroes, 
+    counteringWeight, 
+    'Counters ')
 }
 
 function scoreBasedOnOtherHeroes(others: (Hero | undefined)[], potentialIds: string[], score: number, reasonPrefix: string) {
