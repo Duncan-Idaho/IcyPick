@@ -25,6 +25,8 @@ export interface ScoringContext {
 export interface ScoredHero extends EnrichedHero {
   score: number;
   scoreReasons: ScoreReason[];
+  banScore: number;
+  banScoreReasons: ScoreReason[];
 }
 
 export interface ScoreReason {
@@ -35,13 +37,22 @@ export interface ScoreReason {
 
 export function toScoredHero(hero: EnrichedHero): ScoredHero {
   return {
-      ...hero,
+    ...hero,
     score: 0,
-    scoreReasons: []
+    scoreReasons: [],
+    banScore: 0,
+    banScoreReasons: []
   };
 }
 
 export function scoreHero(hero: ScoredHero, context: ScoringContext) {
+  mainScoreHero(hero, context)
+  banScoreHero(hero, context)
+
+  return hero
+}
+
+export function mainScoreHero(hero: ScoredHero, context: ScoringContext) {
   hero.scoreReasons = [
     ...scoreMap(hero, context),
     ...scoreSynergies(hero, context),
@@ -53,8 +64,20 @@ export function scoreHero(hero: ScoredHero, context: ScoringContext) {
   hero.score = hero.scoreReasons
     .filter(score => !score.inactive)
     .reduce((total, score) => total + score.score, 0)
+}
 
-  return hero
+export function banScoreHero(hero: ScoredHero, context: ScoringContext) {
+  hero.banScoreReasons = [
+    ...scoreMap(hero, context),
+    ...scoreEnnemySynergies(hero, context),
+    ...scoreEnnemyCountered(hero, context),
+    ...scoreEnnemyCountering(hero, context),
+    ...scoreTiers(hero, context)
+  ].filter(defined);
+
+  hero.banScore = hero.banScoreReasons
+    .filter(score => !score.inactive)
+    .reduce((total, score) => total + score.score, 0)
 }
 
 function scoreMap(hero: ScoredHero, context: ScoringContext) {
@@ -89,6 +112,30 @@ function scoreCountered(hero: ScoredHero, context: ScoringContext) {
 function scoreCountering(hero: ScoredHero, context: ScoringContext) {
   return scoreBasedOnOtherHeroes(
     context.ennemies, 
+    hero.extra.countersHeroes, 
+    counteringWeight, 
+    'Counters ')
+}
+
+function scoreEnnemySynergies(hero: ScoredHero, context: ScoringContext) {
+  return scoreBasedOnOtherHeroes(
+    context.ennemies, 
+    hero.synergiesAndCounter.synergicHeroes.concat(hero.extra.synergizeWithHeroes), 
+    synergyWeight, 
+    'Synergize with ')
+}
+
+function scoreEnnemyCountered(hero: ScoredHero, context: ScoringContext) {
+  return scoreBasedOnOtherHeroes(
+    context.allies, 
+    hero.synergiesAndCounter.counteringHeroes, 
+    counteredWeight, 
+    'Countered by ')
+}
+
+function scoreEnnemyCountering(hero: ScoredHero, context: ScoringContext) {
+  return scoreBasedOnOtherHeroes(
+    context.allies, 
     hero.extra.countersHeroes, 
     counteringWeight, 
     'Counters ')

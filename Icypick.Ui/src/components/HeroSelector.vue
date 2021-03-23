@@ -8,6 +8,8 @@
           :heroes="role.heroes" 
           :row-size="7"
           :modelValue="role.selectedIndex" 
+          :showScore="true"
+          :showBanScore="true"
           @update:modelValue="onHeroClick(role, $event)"/>
       </div>
     </div>

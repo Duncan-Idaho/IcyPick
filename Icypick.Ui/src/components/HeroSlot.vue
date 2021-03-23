@@ -1,7 +1,7 @@
 <template>
-  <div class="hero-container">
+  <div :class="classes">
     <template v-if="hero">
-      <div :class="classes">
+      <div class="hero-border">
         <img class="hero-icon" 
           draggable="false"
           :src="require(`@/assets/images/heroes/${hero.id}.jpg`)" 
@@ -11,20 +11,34 @@
         :class="{'hero-score': true, 'hero-score-positive': hero.score > 0, 'hero-score-negative': hero.score < 0 }">
         {{ hero.score }}
       </div>
+      <div 
+        :class="{'hero-ban-score': true, 'hero-score-positive': hero.banScore > 0, 'hero-score-negative': hero.banScore < 0 }">
+        {{ hero.banScore }}
+      </div>
       <div class="tooltip">
         <div class="hero-name">{{ hero.name }}</div>
-        <ul>
-          <template v-for="reason in hero.scoreReasons" :key="reason.reason" >
-            <li v-if="reason.score != 0" :class="{'hero-score-positive': reason.score > 0, 'hero-score-negative': reason.score < 0 }">
-              <span class="hero-score-reason-increment">{{ (reason.score > 0 ? '+' : '\u2212') + Math.abs(reason.score) }}</span>
-              <span class="hero-score-reason-text">{{ reason.reason }}</span>
-            </li>
-          </template>
-        </ul>
+        <div class="tooltip-content">
+          <ul class="tooltip-main-score">
+            <template v-for="reason in hero.scoreReasons" :key="reason.reason" >
+              <li v-if="reason.score != 0" :class="{'hero-score-positive': reason.score > 0, 'hero-score-negative': reason.score < 0 }">
+                <span class="hero-score-reason-increment">{{ (reason.score > 0 ? '+' : '\u2212') + Math.abs(reason.score) }}</span>
+                <span class="hero-score-reason-text">{{ reason.reason }}</span>
+              </li>
+            </template>
+          </ul>
+          <ul class="tooltip-ban-score">
+            <template v-for="reason in hero.banScoreReasons" :key="reason.reason" >
+              <li v-if="reason.score != 0" :class="{'hero-score-positive': reason.score > 0, 'hero-score-negative': reason.score < 0 }">
+                <span class="hero-score-reason-increment">{{ (reason.score > 0 ? '+' : '\u2212') + Math.abs(reason.score) }}</span>
+                <span class="hero-score-reason-text">{{ reason.reason }}</span>
+              </li>
+            </template>
+          </ul>
+        </div>
       </div>
     </template>
 
-    <div :class="classes" v-else>
+    <div class="hero-border" v-else>
       <span class="hero-icon mdi mdi-help" />
     </div>
   </div>
@@ -42,13 +56,22 @@ export default defineComponent({
     },
     selected: {
       type: Boolean
+    },
+    showScore: {
+      type: Boolean,
+      default: false
+    },
+    showBanScore: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     classes(): { [className: string]: boolean } {
       return {
-        'hero-border': true,
         'hero-container': true,
+        'show-score': this.showScore,
+        'show-ban-score': this.showBanScore,
         'selected': this.selected
       }
     }
@@ -66,7 +89,7 @@ $hero-width: var(--hero-width, 5rem);
   display: inline-block;
   position: relative;
 
-  .hero-score {
+  .hero-score, .hero-ban-score {
     display: none;
     position: absolute;
 
@@ -88,6 +111,16 @@ $hero-width: var(--hero-width, 5rem);
     font-weight: bold;
 
     z-index: 1;
+  }
+
+  .hero-score, .hero-ban-score {
+    display: none;
+  }
+
+  &.show-score .hero-score {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%) translateX(calc(var(--hero-width, 5rem) / -4)) translateX(+0.2rem) translateY(-0.2rem);
     
 
     &.hero-score-positive {
@@ -101,7 +134,28 @@ $hero-width: var(--hero-width, 5rem);
       display: flex;
       
       background: rgb(41, 17, 85);
+      color: rgb(182, 4, 4);
+    }
+  }
+
+  &.show-ban-score .hero-ban-score {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%) translateX(calc(var(--hero-width, 5rem) / 4)) translateX(-0.2rem) translateY(-0.2rem);
+    
+
+    &.hero-score-positive {
+      display: flex;
+
+      background: rgb(75, 16, 90);
       color: red;
+    }
+
+    &.hero-score-negative {
+      display: flex;
+      
+      background: rgb(75, 16, 90);
+      color: rgb(93, 93, 243);
     }
   }
 
@@ -109,8 +163,31 @@ $hero-width: var(--hero-width, 5rem);
     display: none;
   }
 
-  &:hover .tooltip {
+  &:hover.show-score .tooltip, &:hover.show-ban-score .tooltip {
     display: block;
+    width: 10rem;
+  }
+
+  &:hover.show-score.show-ban-score .tooltip {
+    display: block;
+    width: 20rem;
+  }
+
+  &.show-score:hover .tooltip .tooltip-main-score {
+    display:flex;
+    flex-flow: column nowrap;
+  }
+
+  &.show-ban-score:hover .tooltip .tooltip-ban-score {
+    display:flex;
+    flex-flow: column nowrap;
+  }
+
+  &.show-score.show-ban-score:hover .tooltip .tooltip-ban-score {
+    border-left: 1px solid black;
+  }
+
+  &:hover .tooltip {
     position: absolute;
     z-index: 10;
 
@@ -118,25 +195,31 @@ $hero-width: var(--hero-width, 5rem);
     left: 50%;
     transform: translateX(-50%);
 
-    width: 10rem;
     line-height: 1rem;
 
-    padding: 0.4rem;
+    padding: 0.8rem 0.4rem;
     border-radius: 0.4rem;
     
     $color: rgba(163, 161, 185, 0.8);
 
     background:$color;
-    color: rgb(27, 27, 27);
+    color: rgb(0, 0, 0);
 
     .hero-name {
       font-size: 1.3rem;
       font-weight: bolder;
       text-align: center;
-      padding: 0.4rem 0rem;
+      padding: 0.2rem 0rem 1rem 0rem;
+    }
+
+    .tooltip-content {
+      display: flex;
     }
 
     ul {
+      display: none;
+
+      flex: 1 1 50%;
       margin: 0;
       padding: 0;
       text-align: left;
@@ -145,8 +228,6 @@ $hero-width: var(--hero-width, 5rem);
 
     li {
       display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
       padding: 0.2rem 0rem;
 
       &.hero-score-positive .hero-score-reason-increment {
@@ -159,6 +240,20 @@ $hero-width: var(--hero-width, 5rem);
         font-weight: bold;
       }
     }
+
+    .tooltip-main-score li {
+      flex-flow: row nowrap;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    .tooltip-ban-score li {
+      flex-flow: row-reverse nowrap;
+      align-items: flex-start;
+      justify-content: flex-start;
+      text-align: right;
+    }
+
+
 
     .hero-score-reason-increment {
       flex: none;
@@ -184,7 +279,7 @@ $hero-width: var(--hero-width, 5rem);
 .hero-border {
   --hexagon-border: 0.2rem;
   background-color: rgb(38, 38, 39);
-  &.selected {
+  .selected & {
     --hexagon-border: 0.2rem;
     background-color: rgba(138, 150, 255, 1);
   }

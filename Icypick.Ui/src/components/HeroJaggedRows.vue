@@ -5,6 +5,8 @@
         :key="index" 
         :hero="hero" 
         :selected="modelValue === index"
+        :showScore="showScore"
+        :showBanScore="showBanScore"
         @click="onHeroClick(index)"/>
 
       <div class="gap" v-if="rowSize != 1 && group.longLine.length % 2 !== 1"/>
@@ -14,6 +16,8 @@
         :key="index" 
         :hero="hero" 
         :selected="modelValue === index"
+        :showScore="showScore"
+        :showBanScore="showBanScore"
         @click="onHeroClick(index)"/>
 
       <div class="gap" v-if="rowSize != 1 && group.shortLine.length % 2 !== 0"/>
@@ -55,6 +59,14 @@ export default defineComponent({
     },
     modelValue: {
       type: Number as PropType<number | undefined>
+    },
+    showScore: {
+      type: Boolean,
+      default: false
+    },
+    showBanScore: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['update:modelValue'],

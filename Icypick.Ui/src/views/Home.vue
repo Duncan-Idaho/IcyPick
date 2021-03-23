@@ -29,6 +29,7 @@
           :row-size="1"
           alignment="left"
           :modelValue="selectedAllySlot"
+          :showScore="true"
           @update:modelValue="onAllySlotClicked"
           />
       </div>
@@ -43,6 +44,7 @@
           :row-size="1"
           alignment="right"
           :modelValue="selectedEnnemySlot"
+          :showBanScore="true"
           @update:modelValue="onEnnemySlotClicked"
           />
       </div>
