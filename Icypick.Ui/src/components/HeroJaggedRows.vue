@@ -7,6 +7,7 @@
         :selected="modelValue === index"
         :showScore="showScore"
         :showBanScore="showBanScore"
+        :tooltipDirection="tooltipDirection"
         @click="onHeroClick(index)"/>
 
       <div class="gap" v-if="rowSize != 1 && group.longLine.length % 2 !== 1"/>
@@ -18,6 +19,7 @@
         :selected="modelValue === index"
         :showScore="showScore"
         :showBanScore="showBanScore"
+        :tooltipDirection="tooltipDirection"
         @click="onHeroClick(index)"/>
 
       <div class="gap" v-if="rowSize != 1 && group.shortLine.length % 2 !== 0"/>
@@ -67,6 +69,10 @@ export default defineComponent({
     showBanScore: {
       type: Boolean,
       default: false
+    },
+    tooltipDirection: {
+      type: String as PropType<'left'|'right'|'bottom'>,
+      default: 'bottom'
     }
   },
   emits: ['update:modelValue'],

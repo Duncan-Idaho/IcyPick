@@ -76,6 +76,7 @@ export default defineComponent({
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;
+  padding-bottom: 15rem;
 }
 
 button {
@@ -90,4 +91,5 @@ button {
   flex-wrap: nowrap;
   align-items: center;
 }
+
 </style>

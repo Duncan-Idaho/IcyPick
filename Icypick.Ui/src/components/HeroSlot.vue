@@ -15,7 +15,7 @@
         :class="{'hero-ban-score': true, 'hero-score-positive': hero.banScore > 0, 'hero-score-negative': hero.banScore < 0 }">
         {{ hero.banScore }}
       </div>
-      <div class="tooltip">
+      <div :class="tooltipClasses">
         <div class="hero-name">{{ hero.name }}</div>
         <div class="tooltip-content">
           <ul class="tooltip-main-score">
@@ -64,6 +64,10 @@ export default defineComponent({
     showBanScore: {
       type: Boolean,
       default: false
+    },
+    tooltipDirection: {
+      type: String as PropType<'left'|'right'|'bottom'>,
+      default: 'bottom'
     }
   },
   computed: {
@@ -74,6 +78,9 @@ export default defineComponent({
         'show-ban-score': this.showBanScore,
         'selected': this.selected
       }
+    },
+    tooltipClasses(): string[] {
+      return [ 'tooltip', 'tooltip-' + this.tooltipDirection ]
     }
   }
 });
@@ -159,6 +166,8 @@ $hero-width: var(--hero-width, 5rem);
     }
   }
 
+  $arrow-color: rgba(163, 161, 185, 0.8);
+
   .tooltip {
     display: none;
   }
@@ -191,18 +200,59 @@ $hero-width: var(--hero-width, 5rem);
     position: absolute;
     z-index: 10;
 
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    &.tooltip-bottom {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+
+      &::after {
+        top:0%;
+        left:50%;
+        transform:translateX(-50%) translateY(-100%);
+        border-color: transparent transparent $arrow-color transparent;
+      }
+    }
+
+    &.tooltip-left {
+      top: 50%;
+      left: 0%;
+      transform: translateX(-100%) translateY(-50%);
+
+      &::after {
+        left:100%;
+        top:50%;
+        transform:translateY(-50%);
+        border-color: transparent transparent transparent $arrow-color;
+      }
+    }
+
+    &.tooltip-right {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+
+      &::after {
+        left:0%;
+        top:50%;
+        transform:translateY(-50%) translateX(-100%);
+        border-color: transparent $arrow-color transparent transparent;
+        
+      }
+    }
+
+    &::after {
+      content: "";
+      position:absolute;
+      
+      border: 0.5rem solid;
+    }
 
     line-height: 1rem;
 
     padding: 0.8rem 0.4rem;
     border-radius: 0.4rem;
-    
-    $color: rgba(163, 161, 185, 0.8);
 
-    background:$color;
+    background:$arrow-color;
     color: rgb(0, 0, 0);
 
     .hero-name {
@@ -259,19 +309,6 @@ $hero-width: var(--hero-width, 5rem);
       flex: none;
       width: 2rem;
       text-align: center;
-    }
-
-    &::after {
-      content: "";
-      position:absolute;
-
-      top:0%;
-
-      left:50%;
-      transform:translateX(-50%) translateY(-100%);
-      
-      border: 0.5rem solid;
-      border-color: transparent transparent $color transparent;
     }
   }
 }

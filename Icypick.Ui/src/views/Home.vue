@@ -30,6 +30,7 @@
           alignment="left"
           :modelValue="selectedAllySlot"
           :showScore="true"
+          tooltipDirection="right"
           @update:modelValue="onAllySlotClicked"
           />
       </div>
@@ -45,6 +46,7 @@
           alignment="right"
           :modelValue="selectedEnnemySlot"
           :showBanScore="true"
+          tooltipDirection="left"
           @update:modelValue="onEnnemySlotClicked"
           />
       </div>
